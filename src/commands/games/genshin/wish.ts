@@ -3,7 +3,6 @@ import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
 import connection from "../../../mongoose/connection";
 import { Character, Inventory, User } from "../../../mongoose/Schema";
 import { ICharacter } from "../../../types/GenshinTypes";
-import { ObjectId } from "mongodb";
 
 const wishingEmbed = new EmbedBuilder()
   .setColor(Colors.White)
@@ -55,16 +54,16 @@ export default {
         },
       ];
     } else {
-      const findChara = currentInventory.charactersId.findIndex(
-        (c) => c.characterId === character._id
+      const findChara = currentInventory.charactersId.find((c) =>
+        character._id.equals(c.characterId)
       );
-      if (findChara === -1) {
+      if (!findChara) {
         currentInventory.charactersId.push({
           characterId: character._id,
           constellation: 0,
         });
       } else {
-        currentInventory.charactersId[findChara].constellation += 1;
+        findChara.constellation += 1;
       }
     }
     await currentInventory.save();

@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, Colors } from "discord.js";
 import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
 import { Inventory, User } from "../../../mongoose/Schema";
 import connection from "../../../mongoose/connection";
+import { ICharacter } from "src/types/GenshinTypes";
 
 export default {
   data: new SlashCommandBuilder()
@@ -58,7 +59,19 @@ export default {
         value:
           fiveStarCharacters.length > 0
             ? fiveStarCharacters
-                .map(({ characterId }) => characterId.name)
+                .map(
+                  ({
+                    characterId,
+                    constellation,
+                  }: {
+                    characterId: ICharacter;
+                    constellation: number;
+                  }) => {
+                    if (constellation > 0)
+                      return `${characterId.name} C${constellation}`;
+                    return characterId.name;
+                  }
+                )
                 .join()
             : "You have no 5 stars characters!",
       })
@@ -67,11 +80,22 @@ export default {
         value:
           fourStarCharacters.length > 0
             ? fourStarCharacters
-                .map(({ characterId }) => characterId.name)
+                .map(
+                  ({
+                    characterId,
+                    constellation,
+                  }: {
+                    characterId: ICharacter;
+                    constellation: number;
+                  }) => {
+                    if (constellation > 0)
+                      return `${characterId.name} C${constellation}`;
+                    return characterId.name;
+                  }
+                )
                 .join()
             : "You have no 4 stars characters!",
       });
-
     await interaction.reply({ embeds: [baseEmbed] });
   },
 };
