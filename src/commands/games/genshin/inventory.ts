@@ -2,15 +2,13 @@ import { ChatInputCommandInteraction, Colors } from "discord.js";
 import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
 import { Inventory, User } from "../../../mongoose/Schema";
 import connection from "../../../mongoose/connection";
-import { ICharacter } from "src/types/GenshinTypes";
+import { CharactersPerUser, ICharacter } from "src/types/GenshinTypes";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("inventory")
     .setDescription("View all of your acquired genshin characters!"),
   async execute(interaction: ChatInputCommandInteraction) {
-    await connection();
-
     let currentUser = await User.findOne({
       discordId: interaction.user.id,
     });
@@ -58,44 +56,33 @@ export default {
         name: "5 Stars",
         value:
           fiveStarCharacters.length > 0
-            ? fiveStarCharacters
-                .map(
-                  ({
-                    characterId,
-                    constellation,
-                  }: {
-                    characterId: ICharacter;
-                    constellation: number;
-                  }) => {
-                    if (constellation > 0)
-                      return `${characterId.name} C${constellation}`;
-                    return characterId.name;
-                  }
-                )
-                .join()
+            ? constructWishString(fiveStarCharacters)
             : "You have no 5 stars characters!",
       })
       .addFields({
         name: "4 Stars",
         value:
           fourStarCharacters.length > 0
-            ? fourStarCharacters
-                .map(
-                  ({
-                    characterId,
-                    constellation,
-                  }: {
-                    characterId: ICharacter;
-                    constellation: number;
-                  }) => {
-                    if (constellation > 0)
-                      return `${characterId.name} C${constellation}`;
-                    return characterId.name;
-                  }
-                )
-                .join()
+            ? constructWishString(fourStarCharacters)
             : "You have no 4 stars characters!",
       });
     await interaction.reply({ embeds: [baseEmbed] });
   },
 };
+
+function constructWishString(characters: CharactersPerUser[]): string {
+  return characters
+    .map(
+      ({
+        characterId,
+        constellation,
+      }: {
+        characterId: ICharacter;
+        constellation: number;
+      }) => {
+        if (constellation > 0) return `${characterId.name} C${constellation}`;
+        return characterId.name;
+      }
+    )
+    .join("\n");
+}

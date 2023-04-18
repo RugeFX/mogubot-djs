@@ -15,8 +15,6 @@ export default {
     .setName("wish")
     .setDescription("Wish genshin characters!"),
   async execute(interaction: ChatInputCommandInteraction) {
-    await connection();
-
     const character = await wishRandomCharacter();
     const wishedEmbed = new EmbedBuilder()
       .setColor(character?.rarity === 5 ? Colors.Gold : Colors.Purple)
@@ -25,48 +23,7 @@ export default {
       .setImage(`${character?.image}`)
       .setTimestamp();
 
-    let currentUser = await User.findOne({
-      discordId: interaction.user.id,
-    });
-    if (!currentUser) {
-      currentUser = await User.create({
-        discordId: interaction.user.id,
-      });
-    }
-
-    let currentInventory = await Inventory.findOne({
-      userId: currentUser._id,
-    });
-    if (!currentInventory) {
-      currentInventory = await Inventory.create({
-        userId: currentUser._id,
-      });
-    }
-
-    if (
-      currentInventory.charactersId === undefined ||
-      currentInventory.charactersId.length < 1
-    ) {
-      currentInventory.charactersId = [
-        {
-          characterId: character._id,
-          constellation: 0,
-        },
-      ];
-    } else {
-      const findChara = currentInventory.charactersId.find((c) =>
-        character._id.equals(c.characterId)
-      );
-      if (!findChara) {
-        currentInventory.charactersId.push({
-          characterId: character._id,
-          constellation: 0,
-        });
-      } else {
-        findChara.constellation += 1;
-      }
-    }
-    await currentInventory.save();
+    await addCharacterToCurrentUser(interaction.user.id, character);
 
     await interaction.reply({ embeds: [wishingEmbed] });
     setTimeout(async () => {
@@ -79,4 +36,52 @@ async function wishRandomCharacter(): Promise<ICharacter> {
   const characters: ICharacter[] = await Character.find();
   const randomIndex = Math.floor(Math.random() * (characters.length + 1));
   return characters[randomIndex];
+}
+
+async function addCharacterToCurrentUser(
+  currentUserId: string,
+  character: ICharacter
+) {
+  let currentUser = await User.findOne({
+    discordId: currentUserId,
+  });
+  if (!currentUser) {
+    currentUser = await User.create({
+      discordId: currentUserId,
+    });
+  }
+
+  let currentInventory = await Inventory.findOne({
+    userId: currentUser._id,
+  });
+  if (!currentInventory) {
+    currentInventory = await Inventory.create({
+      userId: currentUser._id,
+    });
+  }
+
+  if (
+    currentInventory.charactersId === undefined ||
+    currentInventory.charactersId.length < 1
+  ) {
+    currentInventory.charactersId = [
+      {
+        characterId: character._id,
+        constellation: 0,
+      },
+    ];
+  } else {
+    const findChara = currentInventory.charactersId.find((c) =>
+      character._id.equals(c.characterId)
+    );
+    if (!findChara) {
+      currentInventory.charactersId.push({
+        characterId: character._id,
+        constellation: 0,
+      });
+    } else {
+      findChara.constellation += 1;
+    }
+  }
+  await currentInventory.save();
 }

@@ -13,6 +13,7 @@ import {
 } from "discord.js";
 import Command from "./types/Command";
 import { EmbedBuilder } from "@discordjs/builders";
+import connection from "./mongoose/connection";
 
 config();
 const TOKEN = process.env.TOKEN as string;
@@ -71,6 +72,8 @@ client.on("ready", async () => {
 
   console.log(`Mogu mogu! Client: ${client.user?.tag}`);
 });
+
+connection();
 
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
