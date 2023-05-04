@@ -78,35 +78,39 @@ connection();
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
     console.log("masuk button");
+    // try {
+    //   const collector = await interaction.channel.({
+    //     time: 15000,
+    //   });
+    //   collector?.on("collect", async (i) => {
+    //     if (i.customId == "fillet") {
+    //       // defer the interaction
+    //       await i.deferUpdate();
+    //       await i.update({ content: "Fillet mignon" });
+    //     }
+    //   });
+    // } catch (e) {
+    //   console.error(e);
+    // }
+  } else if (interaction.isChatInputCommand()) {
+    const command = commandsCollection.get(interaction.commandName);
+    if (!command) return;
     try {
-      const updateInteraction = await interaction.update({
-        content: "A component interaction was received",
-        components: [],
+      await command.execute(interaction);
+    } catch (err) {
+      console.error(err);
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(Colors.Red)
+            .setTitle("Error!")
+            .setDescription("There was an error upon processing your command!")
+            .setTimestamp(),
+        ],
       });
-      console.log(updateInteraction);
-    } catch (e) {
-      console.error(e);
     }
-  }
-
-  if (!interaction.isChatInputCommand()) return;
-
-  const command = commandsCollection.get(interaction.commandName);
-  if (!command) return;
-
-  const errorEmbed = new EmbedBuilder()
-    .setColor(Colors.Red)
-    .setTitle("Error!")
-    .setDescription("There was an error upon processing your command!")
-    .setTimestamp();
-
-  try {
-    await command.execute(interaction);
-  } catch (err) {
-    console.error(err);
-    await interaction.reply({
-      embeds: [errorEmbed],
-    });
+  } else {
+    return;
   }
 });
 
