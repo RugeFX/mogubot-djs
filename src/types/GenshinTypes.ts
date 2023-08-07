@@ -60,6 +60,6 @@ export interface IInventory extends Document {
 }
 
 export interface CharactersPerUser {
-  characterId: ICharacter["_id"];
+  characterId: ICharacter;
   constellation: number;
 }

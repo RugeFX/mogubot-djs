@@ -1,6 +1,5 @@
-import fs from "fs";
+import "dotenv/config";
 import path from "path";
-import { config } from "dotenv";
 import {
   REST,
   Client,
@@ -11,14 +10,15 @@ import {
   PresenceUpdateStatus,
   Colors,
 } from "discord.js";
-import Command from "./types/Command";
 import { EmbedBuilder } from "@discordjs/builders";
-import connection from "./mongoose/connection";
 
-config();
-const TOKEN = process.env.TOKEN as string;
-const CLIENT_ID = process.env.CLIENT_ID as string;
-const GUILD_ID = process.env.GUILD_ID as string;
+import type Command from "./types/Command";
+import connection from "./mongoose/connection";
+import readCommands from "./utils/readCommands";
+
+const TOKEN = process.env.TOKEN!;
+const CLIENT_ID = process.env.CLIENT_ID!;
+const GUILD_ID = process.env.GUILD_ID!;
 
 const client = new Client({
   intents: [
@@ -33,29 +33,12 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 
 const commandsCollection = new Collection<string, Command>();
 const commandsPath = path.join(__dirname, "commands");
-readCommands(commandsPath);
 
-function readCommands(directory: string) {
-  const files = fs.readdirSync(directory);
+connection();
+readCommands(commandsCollection, commandsPath);
 
-  files.forEach((file) => {
-    const filePath = path.join(directory, file);
-    const stat = fs.statSync(filePath);
-
-    if (stat.isDirectory()) {
-      readCommands(filePath);
-    } else if (file.endsWith(".ts")) {
-      const command: Command = require(filePath).default;
-      commandsCollection.set(command.data.name, command);
-      console.log(`done ${filePath}`);
-    } else {
-      return;
-    }
-  });
-}
-
-client.on("ready", async () => {
-  client.user?.setPresence({
+client.on("ready", async (c) => {
+  c.user.setPresence({
     activities: [{ name: "onigirya", type: ActivityType.Listening }],
     status: PresenceUpdateStatus.Idle,
   });
@@ -65,7 +48,8 @@ client.on("ready", async () => {
     });
     console.log("Commands successfully updated!");
     console.log("Registered commands : ");
-    commandsCollection.forEach((com) => console.log(com.data.name));
+    let i = 0;
+    commandsCollection.forEach((com) => console.log(`${++i}. ${com.data.name}`));
   } catch (e) {
     console.error(e);
   }
@@ -73,25 +57,10 @@ client.on("ready", async () => {
   console.log(`Mogu mogu! Client: ${client.user?.tag}`);
 });
 
-connection();
-
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
+    const command = commandsCollection.get(interaction.customId);
     console.log("masuk button");
-    // try {
-    //   const collector = await interaction.channel.({
-    //     time: 15000,
-    //   });
-    //   collector?.on("collect", async (i) => {
-    //     if (i.customId == "fillet") {
-    //       // defer the interaction
-    //       await i.deferUpdate();
-    //       await i.update({ content: "Fillet mignon" });
-    //     }
-    //   });
-    // } catch (e) {
-    //   console.error(e);
-    // }
   } else if (interaction.isChatInputCommand()) {
     const command = commandsCollection.get(interaction.commandName);
     if (!command) return;
@@ -109,8 +78,6 @@ client.on("interactionCreate", async (interaction) => {
         ],
       });
     }
-  } else {
-    return;
   }
 });
 

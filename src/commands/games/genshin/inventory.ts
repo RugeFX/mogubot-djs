@@ -1,7 +1,18 @@
-import { ChatInputCommandInteraction, Colors } from "discord.js";
-import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
+import {
+  ButtonStyle,
+  ChatInputCommandInteraction,
+  Colors,
+  User as DJSUser,
+  MessageComponentInteraction,
+} from "discord.js";
+import {
+  SlashCommandBuilder,
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+} from "@discordjs/builders";
 import { Inventory, User } from "../../../mongoose/Schema";
-import { CharactersPerUser, ICharacter } from "src/types/GenshinTypes";
+import type { CharactersPerUser, ICharacter, IUser } from "src/types/GenshinTypes";
 
 export default {
   data: new SlashCommandBuilder()
@@ -11,88 +22,122 @@ export default {
       user.setName("user").setDescription("Choose a user.").setRequired(false)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    let currentUser = await User.findOne({
-      discordId: interaction.user.id,
-    });
+    let currentUser: IUser | null;
     let interactionUser = interaction.options.getUser("user");
+
+    console.log(interactionUser?.id);
 
     if (interactionUser !== null) {
       currentUser = await User.findOne({
         discordId: interactionUser.id,
       });
-    } else if (!currentUser) {
-      currentUser = await User.create({
+      if (!currentUser) {
+        currentUser = await User.create({
+          discordId: interactionUser.id,
+        });
+      }
+    } else {
+      currentUser = await User.findOne({
         discordId: interaction.user.id,
       });
+      if (!currentUser) {
+        currentUser = await User.create({
+          discordId: interaction.user.id,
+        });
+      }
     }
 
-    console.log(currentUser?.id, interactionUser?.id);
+    console.log("Current user id :" + currentUser);
 
     const currentInventory = await Inventory.findOne({
-      userId: currentUser?._id,
+      userId: currentUser._id,
     }).populate({
       path: "charactersId",
       populate: { path: "characterId" },
     });
 
-    if (!currentUser || !currentInventory?.charactersId) {
+    const inventoryEmbed = () =>
+      new EmbedBuilder()
+        .setThumbnail(interactionUser?.avatarURL() || interaction.user.avatarURL({ size: 1024 }))
+        .setColor(Colors.Blue)
+        .setTitle("Characters")
+        .setDescription(`${interactionUser?.username || interaction.user.username}'s characters`);
+
+    if (!currentInventory?.charactersId) {
       await interaction.reply({
         embeds: [
-          new EmbedBuilder()
-            .setColor(Colors.Blue)
-            .setTitle("Characters")
-            .setDescription(`${interactionUser?.username}'s characters`)
-            .addFields({
-              name: "No characters",
-              value: "You have no characters in your inventory!",
-            }),
+          inventoryEmbed().addFields({
+            name: "No characters",
+            value: "You have no characters in your inventory!",
+          }),
         ],
       });
       return;
     }
 
-    const fiveStarCharacters = currentInventory.charactersId?.filter(
+    const fiveStarCharacters = currentInventory.charactersId.filter(
       (c) => c.characterId.rarity === 5
     );
-    const fourStarCharacters = currentInventory.charactersId?.filter(
+    const fourStarCharacters = currentInventory.charactersId.filter(
       (c) => c.characterId.rarity === 4
     );
 
-    const baseEmbed = new EmbedBuilder()
-      .setColor(Colors.Blue)
-      .setTitle("Characters")
-      .setDescription(`${interactionUser?.username}'s characters`)
-      .addFields({
-        name: "5 Stars",
-        value:
-          fiveStarCharacters.length > 0
-            ? constructWishString(fiveStarCharacters)
-            : "You have no 5 stars characters!",
-      })
-      .addFields({
-        name: "4 Stars",
-        value:
-          fourStarCharacters.length > 0
-            ? constructWishString(fourStarCharacters)
-            : "You have no 4 stars characters!",
+    const fourStarsEmbed = inventoryEmbed().addFields({
+      name: "4 Stars",
+      value:
+        fourStarCharacters.length > 0
+          ? constructWishString(fourStarCharacters)
+          : "You have no 4 stars characters!",
+    });
+
+    const fiveStarsEmbed = inventoryEmbed().addFields({
+      name: "5 Stars",
+      value:
+        fiveStarCharacters.length > 0
+          ? constructWishString(fiveStarCharacters)
+          : "You have no 5 stars characters!",
+    });
+
+    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder().setCustomId("4StarBtn").setLabel("4★").setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId("5StarBtn").setLabel("5★").setStyle(ButtonStyle.Primary)
+    );
+
+    const response = await interaction.reply({ embeds: [fiveStarsEmbed], components: [actionRow] });
+
+    const collectorFilter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
+
+    try {
+      const component = await response.awaitMessageComponent({
+        filter: collectorFilter,
+        time: 60_000,
       });
-    await interaction.reply({ embeds: [baseEmbed] });
+
+      if (component.customId === "4StarBtn") {
+        await component.update({
+          embeds: [fourStarsEmbed],
+          components: [actionRow],
+        });
+      } else if (component.customId === "5StarBtn") {
+        await component.update({
+          embeds: [fiveStarsEmbed],
+          components: [actionRow],
+        });
+      }
+    } catch (e) {
+      // await interaction.editReply({
+      //   content: "Confirmation not received within 15 seconds, cancelling",
+      //   components: [],
+      // });
+      console.error("time limit");
+    }
   },
 };
 
 function constructWishString(characters: CharactersPerUser[]): string {
   return characters
-    .map(
-      ({
-        characterId,
-        constellation,
-      }: {
-        characterId: ICharacter;
-        constellation: number;
-      }) => {
-        if (constellation > 0) return `${characterId.name} C${constellation}`;
-        return characterId.name;
-      }
+    .map(({ characterId, constellation }) =>
+      constellation > 0 ? `${characterId.name} C${constellation}` : characterId.name
     )
     .join("\n");
 }
