@@ -15,7 +15,7 @@ export default function readCommands(collection: Collection<string, Command>, di
 
     if (stat.isDirectory()) {
       readCommands(collection, filePath);
-    } else if (file.endsWith(".ts")) {
+    } else if (file.endsWith(".ts") || file.endsWith(".js")) {
       const command = require(filePath).default as Command;
       collection.set(command.data.name, command);
       console.log(`Done loading command : ${command.data.name}`);
