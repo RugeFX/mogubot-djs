@@ -82,55 +82,70 @@ export default {
       (c) => c.characterId.rarity === 4
     );
 
-    const fourStarsEmbed = inventoryEmbed().addFields({
-      name: "4 Stars",
-      value:
-        fourStarCharacters.length > 0
-          ? constructWishString(fourStarCharacters)
-          : "You have no 4 stars characters!",
+    const charactersEmbed = (rarity: number) =>
+      inventoryEmbed().addFields({
+        name: rarity === 4 ? "4 Stars" : "5 Stars",
+        value:
+          rarity === 4
+            ? fourStarCharacters.length > 0
+              ? constructWishString(fourStarCharacters)
+              : "You have no 4 stars characters!"
+            : fiveStarCharacters.length > 0
+            ? constructWishString(fiveStarCharacters)
+            : "You have no 5 stars characters!",
+      });
+
+    const actionRow = (rarity: number) =>
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId("4StarBtn")
+          .setLabel("4★")
+          .setStyle(ButtonStyle.Primary)
+          .setDisabled(rarity === 4),
+        new ButtonBuilder()
+          .setCustomId("5StarBtn")
+          .setLabel("5★")
+          .setStyle(ButtonStyle.Primary)
+          .setDisabled(rarity === 5)
+      );
+
+    let rarity = 5;
+
+    await interaction.deferReply();
+    const response = await interaction.editReply({
+      embeds: [charactersEmbed(rarity)],
+      components: [actionRow(rarity)],
     });
-
-    const fiveStarsEmbed = inventoryEmbed().addFields({
-      name: "5 Stars",
-      value:
-        fiveStarCharacters.length > 0
-          ? constructWishString(fiveStarCharacters)
-          : "You have no 5 stars characters!",
-    });
-
-    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId("4StarBtn").setLabel("4★").setStyle(ButtonStyle.Primary),
-      new ButtonBuilder().setCustomId("5StarBtn").setLabel("5★").setStyle(ButtonStyle.Primary)
-    );
-
-    const response = await interaction.reply({ embeds: [fiveStarsEmbed], components: [actionRow] });
 
     const collectorFilter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
 
-    try {
-      const component = await response.awaitMessageComponent({
-        filter: collectorFilter,
-        time: 60_000,
+    const collector = response.createMessageComponentCollector({
+      filter: collectorFilter,
+      time: 60_000,
+    });
+
+    collector.on("collect", async (i) => {
+      if (i.user.id !== interaction.user.id) return;
+
+      if (i.customId === "4StarBtn") rarity = 4;
+      else rarity = 5;
+
+      await i.deferUpdate();
+
+      await i.editReply({
+        embeds: [charactersEmbed(rarity)],
+        components: [actionRow(rarity)],
       });
 
-      if (component.customId === "4StarBtn") {
-        await component.update({
-          embeds: [fourStarsEmbed],
-          components: [actionRow],
-        });
-      } else if (component.customId === "5StarBtn") {
-        await component.update({
-          embeds: [fiveStarsEmbed],
-          components: [actionRow],
-        });
-      }
-    } catch (e) {
-      // await interaction.editReply({
-      //   content: "Confirmation not received within 15 seconds, cancelling",
-      //   components: [],
-      // });
-      console.error("time limit");
-    }
+      collector.resetTimer();
+    });
+
+    collector.on("end", async () => {
+      await response.edit({
+        embeds: [charactersEmbed(rarity)],
+        components: [],
+      });
+    });
   },
 };
 
