@@ -22,35 +22,36 @@ export default {
       user.setName("user").setDescription("Choose a user.").setRequired(false)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    let currentUser: IUser | null;
-    let interactionUser = interaction.options.getUser("user");
+    const interactionUser = interaction.options.getUser("user");
+    const currentUserId = interactionUser ? interactionUser.id : interaction.user.id;
 
-    console.log(interactionUser?.id);
-
-    if (interactionUser !== null) {
-      currentUser = await User.findOne({
-        discordId: interactionUser.id,
+    if (interaction.user.bot || interactionUser?.bot) {
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(Colors.Red)
+            .setTitle("Unable to perform action")
+            .setDescription(
+              `${interactionUser?.username || interaction.user.username} is a Discord Bot`
+            ),
+        ],
+        ephemeral: true,
       });
-      if (!currentUser) {
-        currentUser = await User.create({
-          discordId: interactionUser.id,
-        });
-      }
-    } else {
-      currentUser = await User.findOne({
-        discordId: interaction.user.id,
-      });
-      if (!currentUser) {
-        currentUser = await User.create({
-          discordId: interaction.user.id,
-        });
-      }
+      return;
     }
 
-    console.log("Current user id :" + currentUser);
+    const currentUser = await User.findOneAndUpdate(
+      {
+        discordId: currentUserId,
+      },
+      {},
+      { upsert: true }
+    );
+
+    console.log("Current user id :" + currentUserId);
 
     const currentInventory = await Inventory.findOne({
-      userId: currentUser._id,
+      userId: currentUser?._id,
     }).populate({
       path: "charactersId",
       populate: { path: "characterId" },
@@ -127,8 +128,7 @@ export default {
     collector.on("collect", async (i) => {
       if (i.user.id !== interaction.user.id) return;
 
-      if (i.customId === "4StarBtn") rarity = 4;
-      else rarity = 5;
+      rarity = i.customId === "4StarBtn" ? 4 : 5;
 
       await i.deferUpdate();
 

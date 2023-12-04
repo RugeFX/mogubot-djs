@@ -28,6 +28,8 @@ const userSchema = new Schema<IUser>({
   discordId: Number,
 });
 
-export const Character: Model<ICharacter> = model("Character", characterSchema);
-export const Inventory: Model<IInventory> = model("Inventory", inventorySchema);
-export const User: Model<IUser> = model("User", userSchema);
+const Character = model<ICharacter>("Character", characterSchema);
+const Inventory = model<IInventory>("Inventory", inventorySchema);
+const User = model<IUser>("User", userSchema);
+
+export { User, Character, Inventory };
