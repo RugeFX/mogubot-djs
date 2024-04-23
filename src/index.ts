@@ -49,7 +49,7 @@ client.on("ready", async (c) => {
     });
     console.log("Commands successfully updated!");
     console.log("Registered commands : ");
-    commandsCollection.forEach((com, i) => console.log(`${i + 1}. ${com.data.name}`));
+    commandsCollection.forEach((_, name) => console.log(`- ${name}`));
   } catch (e) {
     console.error(e);
   }
