@@ -1,13 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "Node16",
-    "rootDir": "./src/",
-    "outDir": "./dist/",
     "strict": true,
-    "moduleResolution": "Node16",
-    "importHelpers": true,
-    "experimentalDecorators": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "declaration": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
@@ -15,13 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "removeComments": true,
     "typeRoots": ["node_modules/@types"],
-    "sourceMap": false,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "~/*": ["src/*"]
+    },
+    "outDir": "dist"
   },
-  "files": ["src/index.ts"],
-  "include": ["./**/*.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "tests"],
 }

@@ -8,8 +8,8 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
 } from "discord.js";
-import { Inventory, User } from "@/mongoose/Schema";
-import type { CharactersPerUser } from "@/types/GenshinTypes";
+import { Inventory, User } from "~/database/Schema";
+import type { CharactersPerUser } from "~/types/GenshinTypes";
 
 export default {
   data: new SlashCommandBuilder()

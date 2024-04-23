@@ -1,5 +1,5 @@
 import "dotenv/config";
-import path from "path";
+import { join } from "node:path";
 import {
   REST,
   Client,
@@ -11,10 +11,9 @@ import {
   Colors,
   EmbedBuilder,
 } from "discord.js";
-
-import type Command from "./types/Command";
-import connection from "./mongoose/connection";
+import configureDB from "./database/configure";
 import readCommands from "./utils/readCommands";
+import type Command from "./types/Command";
 
 const TOKEN = process.env.TOKEN!;
 const CLIENT_ID = process.env.CLIENT_ID!;
@@ -32,9 +31,9 @@ const client = new Client({
 const rest = new REST({ version: "10" }).setToken(TOKEN);
 
 const commandsCollection = new Collection<string, Command>();
-const commandsPath = path.join(__dirname, "commands");
+const commandsPath = join(__dirname, "commands");
 
-connection();
+configureDB();
 readCommands(commandsCollection, commandsPath);
 
 client.on("ready", async (c) => {

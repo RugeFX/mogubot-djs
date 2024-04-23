@@ -1,4 +1,4 @@
-import { Inventory, User } from "../mongoose/Schema";
+import { Inventory, User } from "../database/Schema";
 import { ICharacter, IInventory } from "../types/GenshinTypes";
 
 /**
@@ -6,9 +6,7 @@ import { ICharacter, IInventory } from "../types/GenshinTypes";
  * @param {string} currentUserId user's id
  * @returns {Promise<IInventory>} the user's inventory object wrapped in a Promise
  */
-export const getCurrentInventory = async (
-  currentUserId: string
-): Promise<IInventory> => {
+export const getCurrentInventory = async (currentUserId: string): Promise<IInventory> => {
   let currentUser = await User.findOne({
     discordId: currentUserId,
   });
@@ -40,10 +38,7 @@ export const addCharacterToInventory = async (
   inventory: IInventory,
   character: ICharacter
 ): Promise<void> => {
-  if (
-    inventory.charactersId === undefined ||
-    inventory.charactersId.length < 1
-  ) {
+  if (inventory.charactersId === undefined || inventory.charactersId.length < 1) {
     inventory.charactersId = [
       {
         characterId: character._id,
@@ -51,9 +46,7 @@ export const addCharacterToInventory = async (
       },
     ];
   } else {
-    const findChara = inventory.charactersId.find((c) =>
-      character._id.equals(c.characterId)
-    );
+    const findChara = inventory.charactersId.find((c) => character._id.equals(c.characterId));
     if (!findChara) {
       inventory.charactersId.push({
         characterId: character._id,

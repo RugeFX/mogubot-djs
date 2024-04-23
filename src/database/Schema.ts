@@ -1,4 +1,4 @@
-import { Model, Schema, Types, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 import { ICharacter, IInventory, IUser } from "../types/GenshinTypes";
 
 const characterSchema = new Schema<ICharacter>({

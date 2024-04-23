@@ -1,7 +1,7 @@
 import { Collection } from "discord.js";
 import fs from "fs";
 import path from "path";
-import type Command from "@/types/Command";
+import type Command from "~/types/Command";
 
 /**
  * Reads all of the commands recursively from the path in the directory parameter and pushes it into the collection
