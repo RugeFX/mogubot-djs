@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
 export default {
   data: new SlashCommandBuilder()
@@ -15,9 +14,7 @@ export default {
     const user = interaction.options.getUser("user");
 
     if (user) {
-      await interaction.reply(
-        `Their username is : ${user.username} and their ID is : ${user.id}`
-      );
+      await interaction.reply(`Their username is : ${user.username} and their ID is : ${user.id}`);
       return;
     }
     await interaction.reply(

@@ -1,12 +1,10 @@
 import {
-  MessageActionRowComponentBuilder,
-  SlashCommandBuilder,
-} from "@discordjs/builders";
-import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   ChatInputCommandInteraction,
+  MessageActionRowComponentBuilder,
+  SlashCommandBuilder,
 } from "discord.js";
 
 export default {
@@ -19,18 +17,17 @@ export default {
 
   async execute(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser("user");
-    const row =
-      new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-        new ButtonBuilder()
-          .setCustomId("primary")
-          .setLabel("Click me!")
-          .setStyle(ButtonStyle.Primary),
-        new ButtonBuilder()
-          .setCustomId("fillet")
-          .setLabel("Fillet mignon")
-          .setStyle(ButtonStyle.Danger)
-          .setEmoji("🗿")
-      );
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId("primary")
+        .setLabel("Click me!")
+        .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId("fillet")
+        .setLabel("Fillet mignon")
+        .setStyle(ButtonStyle.Danger)
+        .setEmoji("🗿")
+    );
     // const dmChannel = await user.createDM();
     const sentMessage = await interaction.reply({
       content: `Hi, ${user?.username}! I am MoguBot`,

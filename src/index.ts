@@ -9,8 +9,8 @@ import {
   GatewayIntentBits,
   PresenceUpdateStatus,
   Colors,
+  EmbedBuilder,
 } from "discord.js";
-import { EmbedBuilder } from "@discordjs/builders";
 
 import type Command from "./types/Command";
 import connection from "./mongoose/connection";
@@ -42,14 +42,14 @@ client.on("ready", async (c) => {
     activities: [{ name: "onigirya", type: ActivityType.Listening }],
     status: PresenceUpdateStatus.Idle,
   });
+
   try {
     await rest.put(Routes.applicationCommands(CLIENT_ID), {
       body: commandsCollection.map((c) => c.data.toJSON()),
     });
     console.log("Commands successfully updated!");
     console.log("Registered commands : ");
-    let i = 0;
-    commandsCollection.forEach((com) => console.log(`${++i}. ${com.data.name}`));
+    commandsCollection.forEach((com, i) => console.log(`${i + 1}. ${com.data.name}`));
   } catch (e) {
     console.error(e);
   }

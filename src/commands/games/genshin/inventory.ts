@@ -2,17 +2,14 @@ import {
   ButtonStyle,
   ChatInputCommandInteraction,
   Colors,
-  User as DJSUser,
   MessageComponentInteraction,
-} from "discord.js";
-import {
   SlashCommandBuilder,
   EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
-} from "@discordjs/builders";
-import { Inventory, User } from "../../../mongoose/Schema";
-import type { CharactersPerUser, ICharacter, IUser } from "src/types/GenshinTypes";
+} from "discord.js";
+import { Inventory, User } from "@/mongoose/Schema";
+import type { CharactersPerUser } from "@/types/GenshinTypes";
 
 export default {
   data: new SlashCommandBuilder()
