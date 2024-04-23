@@ -14,7 +14,6 @@
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.8.0",
-    "axios": "^1.6.8",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "mongodb": "^5.9.2",
