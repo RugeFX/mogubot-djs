@@ -4,3 +4,4 @@ dist/
 tests/
 yarn.lock
 bun.lockb
+pnpm-lock.yaml
