@@ -5,7 +5,6 @@ import type Command from '~/types/Command';
 
 /**
  * Reads all of the commands recursively from the path in the directory parameter and pushes it into the collection
- * @returns {Collection<string, Command>} the commands collection
  * @param {string} directory the commands directory path as a string
  */
 export default async function readCommands(
