@@ -7,6 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "start:dev": "tsx src/index.ts",
     "start:prod": "node dist",
+    "lint": "eslint src",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "keywords": [],
@@ -20,10 +21,13 @@
     "mongoose": "^8.3.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.1.1",
     "@types/node": "^18.19.31",
+    "eslint": "^8.57.0",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.7.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.7.1"
   }
 }

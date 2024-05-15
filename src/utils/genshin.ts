@@ -1,5 +1,5 @@
-import { Inventory, User } from "../database/Schema";
-import { ICharacter, IInventory } from "../types/GenshinTypes";
+import { Inventory, User } from '../database/Schema';
+import { ICharacter, IInventory } from '../types/GenshinTypes';
 
 /**
  * Get current user's inventory provided by the user id parameter
@@ -7,25 +7,25 @@ import { ICharacter, IInventory } from "../types/GenshinTypes";
  * @returns {Promise<IInventory>} the user's inventory object wrapped in a Promise
  */
 export const getCurrentInventory = async (currentUserId: string): Promise<IInventory> => {
-  let currentUser = await User.findOne({
-    discordId: currentUserId,
-  });
-  if (!currentUser) {
-    currentUser = await User.create({
-      discordId: currentUserId,
-    });
-  }
+	let currentUser = await User.findOne({
+		discordId: currentUserId,
+	});
+	if (!currentUser) {
+		currentUser = await User.create({
+			discordId: currentUserId,
+		});
+	}
 
-  let currentInventory = await Inventory.findOne({
-    userId: currentUser._id,
-  });
-  if (!currentInventory) {
-    currentInventory = await Inventory.create({
-      userId: currentUser._id,
-    });
-  }
+	let currentInventory = await Inventory.findOne({
+		userId: currentUser._id,
+	});
+	if (!currentInventory) {
+		currentInventory = await Inventory.create({
+			userId: currentUser._id,
+		});
+	}
 
-  return currentInventory;
+	return currentInventory;
 };
 
 /**
@@ -35,26 +35,28 @@ export const getCurrentInventory = async (currentUserId: string): Promise<IInven
  * @returns {Promise<void>} a void Promise
  */
 export const addCharacterToInventory = async (
-  inventory: IInventory,
-  character: ICharacter
+	inventory: IInventory,
+	character: ICharacter,
 ): Promise<void> => {
-  if (inventory.charactersId === undefined || inventory.charactersId.length < 1) {
-    inventory.charactersId = [
-      {
-        characterId: character._id,
-        constellation: 0,
-      },
-    ];
-  } else {
-    const findChara = inventory.charactersId.find((c) => character._id.equals(c.characterId));
-    if (!findChara) {
-      inventory.charactersId.push({
-        characterId: character._id,
-        constellation: 0,
-      });
-    } else {
-      findChara.constellation += 1;
-    }
-  }
-  await inventory.save();
+	if (inventory.charactersId === undefined || inventory.charactersId.length < 1) {
+		inventory.charactersId = [
+			{
+				characterId: character._id,
+				constellation: 0,
+			},
+		];
+	}
+	else {
+		const findChara = inventory.charactersId.find((c) => character._id.equals(c.characterId));
+		if (!findChara) {
+			inventory.charactersId.push({
+				characterId: character._id,
+				constellation: 0,
+			});
+		}
+		else {
+			findChara.constellation += 1;
+		}
+	}
+	await inventory.save();
 };
