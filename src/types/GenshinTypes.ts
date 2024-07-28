@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { Document } from 'mongoose';
 
 export interface IUser extends Document {
@@ -31,7 +32,7 @@ export interface Constellation {
   level: number;
 }
 
-export interface ICharacter extends Document {
+export interface ICharacter extends Document<ObjectId> {
   name: string;
   vision: string;
   rarity: number;
@@ -54,7 +55,7 @@ export interface CharacterAPIType {
   constellations: Constellation[];
 }
 
-export interface IInventory extends Document {
+export interface IInventory extends Document<ObjectId> {
   userId: IUser['_id'];
   charactersId?: CharactersPerUser[];
 }

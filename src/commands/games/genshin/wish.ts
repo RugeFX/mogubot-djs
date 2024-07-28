@@ -13,7 +13,7 @@ export default {
 		const wishedEmbed = constructWishedEmbed(character);
 
 		const alreadyHasCharacter = currentInventory.charactersId?.find((c) =>
-			character._id.equals(c.characterId),
+			character._id?.equals(c.characterId._id),
 		);
 		if (alreadyHasCharacter !== undefined) {
 			wishedEmbed.addFields({

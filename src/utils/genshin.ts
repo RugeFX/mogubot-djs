@@ -38,19 +38,21 @@ export const addCharacterToInventory = async (
 	inventory: IInventory,
 	character: ICharacter,
 ): Promise<void> => {
+	console.log(`Adding ${character.name} to inventory with user id: ${inventory.userId}`);
+
 	if (inventory.charactersId === undefined || inventory.charactersId.length < 1) {
 		inventory.charactersId = [
 			{
-				characterId: character._id,
+				characterId: character,
 				constellation: 0,
 			},
 		];
 	}
 	else {
-		const findChara = inventory.charactersId.find((c) => character._id.equals(c.characterId));
+		const findChara = inventory.charactersId.find((c) => character._id?.equals(c.characterId._id));
 		if (!findChara) {
 			inventory.charactersId.push({
-				characterId: character._id,
+				characterId: character,
 				constellation: 0,
 			});
 		}
