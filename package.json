@@ -17,7 +17,7 @@
     "@google/generative-ai": "^0.8.0",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
-    "mongodb": "^5.9.2",
+    "mongodb": "^6.8.0",
     "mongoose": "^8.3.2"
   },
   "devDependencies": {

@@ -1,15 +1,12 @@
 import mongoose from 'mongoose';
 
 export default async function configureDB() {
-	mongoose.connection.on('connected', () => {
-		console.log('Connected to DB!');
-	});
-	mongoose.connection.on('disconnected', () => {
-		console.log('Disonnected from DB!');
-	});
-	mongoose.connection.on('err', (err) => {
-		console.log('DB Error :' + err);
-	});
+	try {
+		await mongoose.connect(process.env.DATABASE_URL!);
 
-	await mongoose.connect(process.env.DATABASE_URL!);
+		console.log('Connected to DB!');
+	}
+	catch (err) {
+		console.log('DB Error :' + err);
+	}
 }
