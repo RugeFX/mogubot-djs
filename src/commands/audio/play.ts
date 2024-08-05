@@ -52,6 +52,8 @@ export default {
 				),
 		),
 	async autoComplete(interaction) {
+		if (interaction.options.getSubcommand() === "local") return;
+
 		const query = interaction.options.getFocused().toLowerCase();
 
 		const result = await ytsr(query || "lofi", { limit: 10, type: "video", safeSearch: true });
