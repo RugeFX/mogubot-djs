@@ -1,4 +1,4 @@
-import type { AudioPlayer, VoiceConnection } from "@discordjs/voice";
+import type { AudioPlayer } from "@discordjs/voice";
 
 export interface Music {
 	source: string;
@@ -6,7 +6,7 @@ export interface Music {
 }
 
 export interface MusicQueue {
-	audioPlayer: AudioPlayer;
-	voiceConnection: VoiceConnection;
+	currentlyPlaying: boolean;
+	audioPlayer?: AudioPlayer;
 	audios: Music[];
 }

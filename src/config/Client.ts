@@ -1,19 +1,14 @@
 import {
-	ActivityType,
-	ChatInputCommandInteraction,
 	Collection,
-	Colors,
 	Client as DJSClient,
-	EmbedBuilder,
 	GatewayIntentBits,
-	Interaction,
-	PresenceUpdateStatus,
-	REST,
-	Routes,
 } from "discord.js";
 import readCommands from "~/utils/readCommands";
 import type Command from "~/types/Command";
 import type { MusicQueue } from "~/types/Music";
+import { readdir } from "fs/promises";
+import { join } from "path";
+import { Event } from "~/types/Event";
 
 export default class Client extends DJSClient {
 	public declare token: string;
@@ -37,60 +32,32 @@ export default class Client extends DJSClient {
 		this.token = token;
 
 		void readCommands(this.commands, commandsPath);
-
-		this.once("ready", this.onceReady.bind(this));
-		this.on("interactionCreate", this.onInteractionCreate.bind(this));
+		void this.setupEventHandlers();
 	}
 
 	public login(): Promise<string> {
 		return super.login(this.token);
 	}
 
-	// TODO: maybe move event the handlers to a separate folder & file
-	private async onInteractionCreate(interaction: Interaction) {
-		if (interaction.isChatInputCommand()) {
-			const command = this.commands.get(interaction.commandName);
-			if (!command) return;
-			try {
-				await command.execute(
-					interaction as ChatInputCommandInteraction<"cached"> & { client: Client },
-				);
+	private async setupEventHandlers() {
+		const events = await readdir(join(__dirname, "../events"));
+
+		for (const event of events) {
+			const eventPath = join(__dirname, "../events", event);
+			const eventFile = (await import(eventPath)).default as Event;
+
+			switch (eventFile.type) {
+			case "once":
+				this.once(eventFile.on, eventFile.handler);
+				break;
+			case "on":
+				this.on(eventFile.on, eventFile.handler);
+				break;
+			default:
+				throw new Error(`Invalid event type on ${event}`);
 			}
-			catch (err) {
-				console.error(err);
-				await interaction.reply({
-					embeds: [
-						new EmbedBuilder()
-							.setColor(Colors.Red)
-							.setTitle("Error!")
-							.setDescription("There was an error upon processing your command!")
-							.setTimestamp(),
-					],
-				});
-			}
+
+			console.log(`Event from file ${event} is registered!`);
 		}
-	}
-
-	private async onceReady(client: DJSClient<true>) {
-		const rest = new REST({ version: "10" }).setToken(this.token);
-
-		client.user.setPresence({
-			activities: [{ name: "onigirya", type: ActivityType.Listening }],
-			status: PresenceUpdateStatus.Idle,
-		});
-
-		try {
-			await rest.put(Routes.applicationCommands(this.user!.id), {
-				body: this.commands.map((cmd) => cmd.data.toJSON()),
-			});
-			console.log("Commands successfully updated!");
-			console.log("Registered commands : ");
-			this.commands.forEach((_, name) => console.log(`- ${name}`));
-		}
-		catch (e) {
-			console.error(e);
-		}
-
-		console.log(`Mogu mogu! Client: ${client.user?.tag}`);
 	}
 }
