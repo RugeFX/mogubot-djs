@@ -14,7 +14,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.9.0",
     "@discordjs/voice": "^0.17.0",
     "@distube/ytdl-core": "^4.14.3",
     "@distube/ytsr": "^2.0.4",
@@ -23,7 +22,8 @@
     "dotenv": "^16.4.5",
     "libsodium-wrappers": "^0.7.14",
     "mongodb": "^6.8.0",
-    "mongoose": "^8.3.2"
+    "mongoose": "^8.3.2",
+    "opusscript": "^0.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.1.1",
