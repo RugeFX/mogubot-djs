@@ -5,34 +5,34 @@ import {
 	ChatInputCommandInteraction,
 	MessageActionRowComponentBuilder,
 	SlashCommandBuilder,
-} from 'discord.js';
+} from "discord.js";
 
 export default {
 	data: new SlashCommandBuilder()
-		.setName('testdm')
-		.setDescription('Test sending a DM message to a given User')
+		.setName("testdm")
+		.setDescription("Test sending a DM message to a given User")
 		.addUserOption((user) =>
-			user.setName('user').setDescription('Choose a user.').setRequired(true),
+			user.setName("user").setDescription("Choose a user.").setRequired(true),
 		),
 
 	async execute(interaction: ChatInputCommandInteraction) {
-		const user = interaction.options.getUser('user');
+		const user = interaction.options.getUser("user");
 		const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
 			new ButtonBuilder()
-				.setCustomId('primary')
-				.setLabel('Click me!')
+				.setCustomId("primary")
+				.setLabel("Click me!")
 				.setStyle(ButtonStyle.Primary),
 			new ButtonBuilder()
-				.setCustomId('fillet')
-				.setLabel('Fillet mignon')
+				.setCustomId("fillet")
+				.setLabel("Fillet mignon")
 				.setStyle(ButtonStyle.Danger)
-				.setEmoji('🗿'),
+				.setEmoji("🗿"),
 		);
 		// const dmChannel = await user.createDM();
 		const sentMessage = await interaction.reply({
 			content: `Hi, ${user?.username}! I am MoguBot`,
 			files: [
-				'https://cdn.discordapp.com/avatars/890983889080815647/52643821cca83ed9d4f5f1288556a819.webp?size=1024',
+				"https://cdn.discordapp.com/avatars/890983889080815647/52643821cca83ed9d4f5f1288556a819.webp?size=1024",
 			],
 			components: [row],
 		});
@@ -42,14 +42,14 @@ export default {
 		});
 		row.components.push(
 			new ButtonBuilder()
-				.setCustomId('fiesta')
-				.setLabel('Fiesta ciken naget')
+				.setCustomId("fiesta")
+				.setLabel("Fiesta ciken naget")
 				.setStyle(ButtonStyle.Success),
 		);
-		collector.on('collect', async (i) => {
-			if (i.customId == 'fillet') {
+		collector.on("collect", async (i) => {
+			if (i.customId == "fillet") {
 				// await i.deferUpdate();
-				await i.update({ content: 'Fillet mignon', components: [row] });
+				await i.update({ content: "Fillet mignon", components: [row] });
 			}
 		});
 		// if (sentMessage.attachments.size === 0) {

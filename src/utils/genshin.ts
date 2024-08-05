@@ -1,5 +1,5 @@
-import { Inventory, User } from '../database/Schema';
-import { ICharacter, IInventory } from '../types/GenshinTypes';
+import { Inventory, User } from "../database/Schema";
+import { ICharacter, IInventory } from "../types/GenshinTypes";
 
 /**
  * Get current user's inventory provided by the user id parameter

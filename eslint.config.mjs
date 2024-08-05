@@ -4,8 +4,9 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(eslint.configs.recommended, ...tseslint.configs.recommended, {
   languageOptions: {
     globals: { node: true, es6: true },
-    parserOptions: {ecmaVersion: 2021},
+    parserOptions: { ecmaVersion: 2021 },
   },
+  files: ["src/**/*.ts"],
   rules: {
     "arrow-spacing": ["warn", { before: true, after: true }],
     "brace-style": ["error", "stroustrup", { allowSingleLine: true }],
@@ -31,7 +32,7 @@ export default tseslint.config(eslint.configs.recommended, ...tseslint.configs.r
     "no-var": "error",
     "object-curly-spacing": ["error", "always"],
     "prefer-const": "error",
-    quotes: ["error", "single"],
+    quotes: ["error", "double"],
     semi: ["error", "always"],
     "space-before-blocks": "error",
     "space-before-function-paren": [

@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongodb';
-import { Document } from 'mongoose';
+import { ObjectId } from "mongodb";
+import { Document } from "mongoose";
 
 export interface IUser extends Document {
   discordId: number;
@@ -10,7 +10,7 @@ export interface Talent {
   unlock: string;
   description: string;
   upgrades: Upgrade[];
-  type: 'NORMAL_ATTACK' | 'ELEMENTAL_SKILL' | 'ELEMENTAL_BURST';
+  type: "NORMAL_ATTACK" | "ELEMENTAL_SKILL" | "ELEMENTAL_BURST";
 }
 
 export interface Upgrade {
@@ -56,7 +56,7 @@ export interface CharacterAPIType {
 }
 
 export interface IInventory extends Document<ObjectId> {
-  userId: IUser['_id'];
+  userId: IUser["_id"];
   charactersId?: CharactersPerUser[];
 }
 

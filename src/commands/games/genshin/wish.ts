@@ -1,10 +1,10 @@
-import { ChatInputCommandInteraction, Colors, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { Character } from '~/database/Schema';
-import { addCharacterToInventory, getCurrentInventory } from '~/utils/genshin';
-import type { ICharacter } from '~/types/GenshinTypes';
+import { ChatInputCommandInteraction, Colors, SlashCommandBuilder, EmbedBuilder } from "discord.js";
+import { Character } from "~/database/Schema";
+import { addCharacterToInventory, getCurrentInventory } from "~/utils/genshin";
+import type { ICharacter } from "~/types/GenshinTypes";
 
 export default {
-	data: new SlashCommandBuilder().setName('wish').setDescription('Wish genshin characters!'),
+	data: new SlashCommandBuilder().setName("wish").setDescription("Wish genshin characters!"),
 	async execute(interaction: ChatInputCommandInteraction) {
 		const character = await wishRandomCharacter();
 		const currentInventory = await getCurrentInventory(interaction.user.id);
@@ -17,7 +17,7 @@ export default {
 		);
 		if (alreadyHasCharacter !== undefined) {
 			wishedEmbed.addFields({
-				name: 'Duplicate',
+				name: "Duplicate",
 				value: `Your ${character.name}'s constellation is now on C${
 					alreadyHasCharacter.constellation + 1
 				}!`,
@@ -68,12 +68,12 @@ function randomGen(probas: number[]) {
 function constructWishingEmbed(character: ICharacter) {
 	return new EmbedBuilder()
 		.setColor(Colors.White)
-		.setTitle('Wishing')
-		.setDescription('You recieved.....')
+		.setTitle("Wishing")
+		.setDescription("You recieved.....")
 		.setImage(
 			character.rarity === 5
-				? 'https://media.tenor.com/YQCvYWzR28wAAAAC/wishing.gif'
-				: 'https://media.tenor.com/JcMSVVkgfgMAAAAC/genshin-wish.gif',
+				? "https://media.tenor.com/YQCvYWzR28wAAAAC/wishing.gif"
+				: "https://media.tenor.com/JcMSVVkgfgMAAAAC/genshin-wish.gif",
 		);
 }
 

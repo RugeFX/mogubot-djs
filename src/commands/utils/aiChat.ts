@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI, Content } from '@google/generative-ai';
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { GoogleGenerativeAI, Content } from "@google/generative-ai";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
-const MODEL_NAME = 'gemini-pro';
+const MODEL_NAME = "gemini-pro";
 const API_KEY = process.env.PALM_API_KEY!;
 
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -17,16 +17,16 @@ const chat = model.startChat({
 
 export default {
 	data: new SlashCommandBuilder()
-		.setName('chat')
-		.setDescription('(Experimental) Chat with Okayu!')
+		.setName("chat")
+		.setDescription("(Experimental) Chat with Okayu!")
 		.addStringOption((body) =>
-			body.setName('body').setDescription('Prompt body to chat with okayu').setRequired(true),
+			body.setName("body").setDescription("Prompt body to chat with okayu").setRequired(true),
 		),
 	async execute(interaction: ChatInputCommandInteraction) {
-		const prompt = interaction.options.getString('body');
+		const prompt = interaction.options.getString("body");
 
 		if (!prompt) {
-			await interaction.reply('How\'d you do that?');
+			await interaction.reply("How'd you do that?");
 			return;
 		}
 
