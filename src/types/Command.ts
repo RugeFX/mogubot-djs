@@ -1,11 +1,16 @@
-import { type ChatInputCommandInteraction, type SlashCommandBuilder } from "discord.js";
+import type { AutocompleteInteraction, ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import type Client from "~/config/Client";
 
+export type WithClient<T> = T & { client: Client };
+
 interface Command {
-  data: SlashCommandBuilder;
-  execute: (
-    interaction: ChatInputCommandInteraction<"cached"> & { client: Client }
-  ) => Promise<void>;
-}
+	data: SlashCommandBuilder;
+	execute: (
+		interaction: WithClient<ChatInputCommandInteraction<"cached">>
+	) => Promise<void>;
+	autoComplete?: (
+		interaction: WithClient<AutocompleteInteraction<"cached">>
+	) => Promise<void>;
+};
 
 export default Command;

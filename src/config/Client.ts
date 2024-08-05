@@ -44,7 +44,7 @@ export default class Client extends DJSClient {
 
 		for (const event of events) {
 			const eventPath = join(__dirname, "../events", event);
-			const eventFile = (await import(eventPath)).default as Event;
+			const eventFile: Event = (await import(eventPath)).default;
 
 			switch (eventFile.type) {
 			case "once":

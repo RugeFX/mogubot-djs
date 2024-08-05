@@ -7,12 +7,14 @@ import {
 	VoiceConnection,
 	VoiceConnectionStatus,
 } from "@discordjs/voice";
+import ytdl from "@distube/ytdl-core";
+import ytsr from "@distube/ytsr";
 import { SlashCommandBuilder, VoiceBasedChannel } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
-import Client from "~/config/Client";
-import Command from "~/types/Command";
-import { Music, MusicQueue } from "~/types/Music";
+import type Client from "~/config/Client";
+import type Command from "~/types/Command";
+import type { Music, MusicQueue } from "~/types/Music";
 
 const MUSIC_LIST = readdirSync(join(__dirname, "../../../assets/audio"))
 	.filter((file) => file.endsWith(".mp3"))
@@ -25,13 +27,42 @@ export default {
 	data: new SlashCommandBuilder()
 		.setName("play")
 		.setDescription("Plays a song (TUYU songs only for now)")
-		.addStringOption((option) =>
-			option
-				.setName("song")
-				.setDescription("Select a song.")
-				.setRequired(true)
-				.addChoices(Object.keys(MUSIC_LIST).map((name) => ({ name, value: name }))),
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName("local")
+				.setDescription("Songs from the local audio folder")
+				.addStringOption((option) =>
+					option
+						.setName("song")
+						.setDescription("Select a song.")
+						.setRequired(true)
+						.addChoices(Object.keys(MUSIC_LIST).map((name) => ({ name, value: name }))),
+				),
+		)
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName("youtube")
+				.setDescription("Songs from YouTube")
+				.addStringOption((option) =>
+					option
+						.setName("song")
+						.setDescription("Search for a song from YouTube.")
+						.setRequired(true)
+						.setAutocomplete(true),
+				),
 		),
+	async autoComplete(interaction) {
+		const query = interaction.options.getFocused().toLowerCase();
+
+		const result = await ytsr(query || "lofi", { limit: 10, type: "video", safeSearch: true });
+
+		try {
+			await interaction.respond(result.items.map((video) => ({ name: video.name, value: video.url })));
+		}
+		catch (error) {
+			console.error(error);
+		}
+	},
 	async execute(interaction) {
 		const voiceChannel = interaction.member.voice.channel;
 		const { client } = interaction;
@@ -44,14 +75,21 @@ export default {
 			return;
 		}
 
-		const selectedSong = interaction.options.getString("song");
-		// This should never happen
-		if (!selectedSong) return;
+		const type = interaction.options.getSubcommand() as "local" | "youtube";
 
-		const music: Music = {
-			metadata: { title: selectedSong, by: "TUYU" },
-			source: join(__dirname, `../../../assets/audio/${MUSIC_LIST[selectedSong]}`),
-		};
+		const selectedSong = interaction.options.getString("song", true);
+
+		const music: Music = type === "local"
+			? {
+				metadata: { title: selectedSong },
+				source: join(__dirname, `../../../assets/audio/${MUSIC_LIST[selectedSong]}`),
+				type,
+			}
+			: {
+				metadata: { title: (await getYoutubeDetails(selectedSong)).title },
+				source: selectedSong,
+				type,
+			};
 
 		const voiceConnection = await connectToChannel(voiceChannel);
 
@@ -89,10 +127,20 @@ async function connectToChannel(channel: VoiceBasedChannel) {
 	}
 }
 
+async function getYoutubeDetails(url: string) {
+	const info = await ytdl.getBasicInfo(url);
+	return info.videoDetails;
+}
+
 function playAudio(music: Music, queue: MusicQueue, voiceConnection: VoiceConnection) {
 	const audioPlayer = createAudioPlayer();
 
-	const resource = createAudioResource(music.source, { metadata: music.metadata });
+	const resource = createAudioResource(
+		music.type === "local"
+			? join(__dirname, `../../../assets/audio/${MUSIC_LIST[music.metadata.title]}`)
+			: ytdl(music.source, { filter: "audioonly", quality: "highestaudio", highWaterMark: 1 << 25 }),
+		{ metadata: music.metadata },
+	);
 
 	audioPlayer.play(resource);
 

@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { join } from "node:path";
+import { generateDependencyReport } from "@discordjs/voice";
 
 import configureDB from "./database/configure";
-import { generateDependencyReport } from "@discordjs/voice";
 import Client from "./config/Client";
 
 /** Configures and sets up the database */
