@@ -5,7 +5,7 @@ import Command from "~/types/Command";
 export default {
 	data: new SlashCommandBuilder()
 		.setName("stop")
-		.setDescription("Stops the currently playing song"),
+		.setDescription("Stops the bot from playing music."),
 	async execute(interaction) {
 		const voiceChannel = interaction.member.voice.channel;
 		const voiceConnection = getVoiceConnection(interaction.guildId);

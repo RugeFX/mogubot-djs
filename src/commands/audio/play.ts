@@ -10,7 +10,7 @@ import {
 import ytdl from "@distube/ytdl-core";
 import ytsr from "@distube/ytsr";
 import { SlashCommandBuilder, VoiceBasedChannel } from "discord.js";
-import { readdirSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import { join } from "path";
 import type Client from "~/config/Client";
 import type Command from "~/types/Command";
@@ -26,15 +26,15 @@ const MUSIC_LIST = readdirSync(join(__dirname, "../../../assets/audio"))
 export default {
 	data: new SlashCommandBuilder()
 		.setName("play")
-		.setDescription("Plays a song (TUYU songs only for now)")
+		.setDescription("Plays music")
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("local")
-				.setDescription("Songs from the local audio folder")
+				.setDescription("Musics from the local audio folder")
 				.addStringOption((option) =>
 					option
-						.setName("song")
-						.setDescription("Select a song.")
+						.setName("music")
+						.setDescription("Select a music.")
 						.setRequired(true)
 						.addChoices(Object.keys(MUSIC_LIST).map((name) => ({ name, value: name }))),
 				),
@@ -42,11 +42,11 @@ export default {
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("youtube")
-				.setDescription("Songs from YouTube")
+				.setDescription("Musics from YouTube")
 				.addStringOption((option) =>
 					option
-						.setName("song")
-						.setDescription("Search for a song from YouTube.")
+						.setName("music")
+						.setDescription("Search for a music from YouTube.")
 						.setRequired(true)
 						.setAutocomplete(true),
 				),
@@ -78,18 +78,25 @@ export default {
 		}
 
 		const type = interaction.options.getSubcommand() as "local" | "youtube";
+		const selectedMusic = interaction.options.getString("music", true);
 
-		const selectedSong = interaction.options.getString("song", true);
+		if (!validateSource(selectedMusic, type)) {
+			await interaction.reply({
+				content: "Could not find the source!",
+				ephemeral: true,
+			});
+			return;
+		}
 
 		const music: Music = type === "local"
 			? {
-				metadata: { title: selectedSong },
-				source: join(__dirname, `../../../assets/audio/${MUSIC_LIST[selectedSong]}`),
+				metadata: { title: selectedMusic },
+				source: join(__dirname, `../../../assets/audio/${MUSIC_LIST[selectedMusic]}`),
 				type,
 			}
 			: {
-				metadata: { title: (await getYoutubeDetails(selectedSong)).title },
-				source: selectedSong,
+				metadata: { title: (await getYoutubeDetails(selectedMusic)).title },
+				source: selectedMusic,
 				type,
 			};
 
@@ -194,4 +201,10 @@ function addMusicToQueue(music: Music, musicQueues: Client["musicQueues"], guild
 	queue.audios.push(music);
 
 	return queue;
+}
+
+function validateSource(source: string, type: "local" | "youtube") {
+	return type === "local"
+		? existsSync(join(__dirname, `../../../assets/audio/${MUSIC_LIST[source]}`))
+		: ytdl.validateURL(source);
 }

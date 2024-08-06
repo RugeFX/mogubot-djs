@@ -5,7 +5,7 @@ import Command from "~/types/Command";
 export default {
 	data: new SlashCommandBuilder()
 		.setName("skip")
-		.setDescription("Skips the currently playing song."),
+		.setDescription("Skips the currently playing music."),
 	async execute(interaction) {
 		const voiceChannel = interaction.member.voice.channel;
 		const voiceConnection = getVoiceConnection(interaction.guildId);
