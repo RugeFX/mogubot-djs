@@ -98,7 +98,7 @@ export default {
 		const queue = addMusicToQueue(music, client.musicQueues, interaction.guildId);
 
 		if (!queue.currentlyPlaying) {
-			playAudio(music, queue, voiceConnection);
+			playAudio(music, client.musicQueues, queue, voiceConnection);
 
 			await interaction.reply({
 				content: `**Now Playing \`${music.metadata.title}\`**`,
@@ -134,7 +134,7 @@ async function getYoutubeDetails(url: string) {
 	return info.videoDetails;
 }
 
-function playAudio(music: Music, queue: MusicQueue, voiceConnection: VoiceConnection) {
+function playAudio(music: Music, musicQueues: Client["musicQueues"], queue: MusicQueue, voiceConnection: VoiceConnection) {
 	const audioPlayer = createAudioPlayer();
 
 	const resource = createAudioResource(
@@ -155,24 +155,25 @@ function playAudio(music: Music, queue: MusicQueue, voiceConnection: VoiceConnec
 		console.log("IM IDLE");
 
 		queue.currentlyPlaying = false;
-		playNext(queue, voiceConnection);
+		playNext(musicQueues, queue, voiceConnection);
 	});
 }
 
-function playNext(queue: MusicQueue, voiceConnection: VoiceConnection) {
+function playNext(musicQueues: Client["musicQueues"], queue: MusicQueue, voiceConnection: VoiceConnection) {
 	queue.audios.shift();
 
 	if (!queue.audios.length) {
 		setTimeout(() => {
 			if (!queue.audios.length && !queue.currentlyPlaying && voiceConnection.state.status !== VoiceConnectionStatus.Destroyed) {
 				voiceConnection.destroy();
+				musicQueues.delete(queue.guildId);
 			}
 		}, 30_000);
 		return;
 	}
 
 	const nextMusic = queue.audios[0];
-	playAudio(nextMusic, queue, voiceConnection);
+	playAudio(nextMusic, musicQueues, queue, voiceConnection);
 }
 
 function addMusicToQueue(music: Music, musicQueues: Client["musicQueues"], guildId: string) {
@@ -182,6 +183,7 @@ function addMusicToQueue(music: Music, musicQueues: Client["musicQueues"], guild
 		const queue: MusicQueue = {
 			currentlyPlaying: false,
 			audios: [music],
+			guildId,
 		};
 		musicQueues.set(guildId, queue);
 

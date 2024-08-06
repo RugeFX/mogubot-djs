@@ -10,4 +10,5 @@ export interface MusicQueue {
 	currentlyPlaying: boolean;
 	audioPlayer?: AudioPlayer;
 	audios: Music[];
+	guildId: string;
 }
