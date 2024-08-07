@@ -22,7 +22,8 @@ export default {
 		voiceConnection.destroy();
 
 		await interaction.reply({
-			content: `**Left voice channel \`${voiceChannel.name}\`**`,
+			content: `**Stopped playing music in channel \`${voiceChannel.name}\`**`,
+			ephemeral: true,
 		});
 	},
 } as Command;
