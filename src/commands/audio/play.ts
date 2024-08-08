@@ -10,14 +10,14 @@ import {
 	VoiceConnectionStatus,
 } from "@discordjs/voice";
 import { exec as ytdl_exec } from "youtube-dl-exec";
+import ytdl from "@distube/ytdl-core";
 import ytsr from "@distube/ytsr";
-import { SlashCommandBuilder, VoiceBasedChannel } from "discord.js";
+import { SlashCommandBuilder, TextBasedChannel, VoiceBasedChannel } from "discord.js";
 import { existsSync, readdirSync } from "fs";
 import { join } from "path";
 import type Client from "~/config/Client";
 import type Command from "~/types/Command";
 import type { Music, MusicQueue } from "~/types/Music";
-import ytdl from "@distube/ytdl-core";
 
 const MUSIC_LIST = readdirSync(join(__dirname, "../../../assets/audio"))
 	.filter((file) => file.endsWith(".mp3"))
@@ -106,10 +106,7 @@ export default {
 					type,
 				};
 
-		const voiceConnection = await connectToChannel(voiceChannel);
-		voiceConnection.on(VoiceConnectionStatus.Destroyed, () => {
-			interaction.channel?.send({ content: `**Left voice channel \`${voiceChannel.name}\`**` });
-		});
+		const voiceConnection = await connectToChannel(voiceChannel, interaction.channel, voiceChannel);
 
 		const queue = addMusicToQueue(music, client.musicQueues, interaction.guildId);
 
@@ -128,14 +125,22 @@ export default {
 	},
 } as Command;
 
-async function connectToChannel(channel: VoiceBasedChannel) {
-	const connection =
-		getVoiceConnection(channel.guild.id) ??
-		joinVoiceChannel({
+async function connectToChannel(channel: VoiceBasedChannel, textChannel: TextBasedChannel | null, voiceChannel: VoiceBasedChannel) {
+	let connection = getVoiceConnection(channel.guild.id);
+
+	if (!connection) {
+		connection = joinVoiceChannel({
 			channelId: channel.id,
 			guildId: channel.guild.id,
 			adapterCreator: channel.guild.voiceAdapterCreator,
+			debug: true,
 		});
+
+		connection.on(VoiceConnectionStatus.Destroyed, () => {
+			console.log("voice connection destroyed");
+			textChannel?.send({ content: `**Left voice channel \`${voiceChannel.name}\`**` });
+		});
+	}
 
 	try {
 		await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
@@ -147,29 +152,20 @@ async function connectToChannel(channel: VoiceBasedChannel) {
 	}
 }
 
-async function getYoutubeDetails(url: string) {
-	const info = await ytdl.getBasicInfo(url);
-	return info.videoDetails;
-}
-
-async function playAudio(
+function playAudio(
 	music: Music,
 	musicQueues: Client["musicQueues"],
 	queue: MusicQueue,
 	voiceConnection: VoiceConnection,
 ) {
+	if (!musicQueues.has(queue.guildId) || voiceConnection.state.status === VoiceConnectionStatus.Destroyed) return;
+
 	const audioPlayer = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
 
 	const resource = createAudioResource(
 		music.type === "local"
 			? join(__dirname, `../../../assets/audio/${MUSIC_LIST[music.metadata.title]}`)
 			: createYTStream(music.source),
-		// : ytdl(music.source, {
-		// 	filter: "audioonly",
-		// 	quality: "highestaudio",
-		// 	liveBuffer: 2000,
-		// 	highWaterMark: 1 << 25,
-		// }),
 		{ metadata: music.metadata },
 	);
 
@@ -188,41 +184,27 @@ async function playAudio(
 	});
 }
 
-function createYTStream(url: string) {
-	const process = ytdl_exec(
-		url,
-		{
-			output: "-",
-			format: "bestaudio[ext=webm][acodec=opus][asr=48000]/bestaudio",
-			limitRate: "1M",
-			rmCacheDir: true,
-			verbose: true,
-		},
-		{ stdio: ["ignore", "pipe", "ignore"], killSignal: "SIGTERM" },
-	);
-
-	const stream = process.stdout!;
-
-	process.catch((err: Error) => {
-		console.error("Probably skipped", err.name);
-	});
-
-	process.on("error", (err) => {
-		if (!process.killed) process.kill();
-		console.error("YT Music process error!", err);
-	});
-
-	process.unref();
-
-	return stream;
-}
-
 function playNext(
 	musicQueues: Client["musicQueues"],
 	queue: MusicQueue,
 	voiceConnection: VoiceConnection,
 ) {
-	queue.audios.shift();
+	const lastMusic = queue.audios.shift();
+
+	console.log("repeat mode:", queue.repeatMode);
+	switch (queue.repeatMode) {
+	case "all":
+		if (!lastMusic) return;
+		console.log("repeating all");
+		// TODO: might rework logic later
+		queue.audios.push(lastMusic);
+		break;
+	case "current":
+		if (!lastMusic) return;
+		console.log("repeating current");
+		queue.audios.unshift(lastMusic);
+		break;
+	}
 
 	if (!queue.audios.length) {
 		setTimeout(() => {
@@ -250,6 +232,7 @@ function addMusicToQueue(music: Music, musicQueues: Client["musicQueues"], guild
 			currentlyPlaying: false,
 			audios: [music],
 			guildId,
+			repeatMode: "off",
 		};
 		musicQueues.set(guildId, queue);
 
@@ -260,6 +243,47 @@ function addMusicToQueue(music: Music, musicQueues: Client["musicQueues"], guild
 	queue.audios.push(music);
 
 	return queue;
+}
+
+function createYTStream(url: string) {
+	console.log("creating yt stream");
+
+	const process = ytdl_exec(
+		url,
+		{
+			output: "-",
+			format: "bestaudio[ext=webm][acodec=opus][asr=48000]/bestaudio",
+			limitRate: "1M",
+			rmCacheDir: true,
+			verbose: true,
+		},
+		{ stdio: ["ignore", "pipe", "ignore"], killSignal: "SIGTERM" },
+	);
+
+	const stream = process.stdout!;
+
+	process.catch((err: Error) => {
+		console.error("Skipped song", err.name);
+	});
+
+	stream.on("error", (err) => {
+		if (!process.killed) process.kill();
+
+		if (err.message.includes("Premature close")) return;
+
+		console.error("YT Music process error!", err.message);
+	});
+
+	process.unref();
+
+	console.log("returning yt stream");
+
+	return stream;
+}
+
+async function getYoutubeDetails(url: string) {
+	const info = await ytdl.getBasicInfo(url);
+	return info.videoDetails;
 }
 
 function validateSource(source: string, type: "local" | "youtube") {

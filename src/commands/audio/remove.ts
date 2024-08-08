@@ -59,7 +59,7 @@ export default {
 
 		let deletedMusic: Music;
 		if (queue.currentlyPlaying && selectedMusicIndex === 0) {
-			// Simply skip the currently playing music
+			// Also skip the currently playing music
 			deletedMusic = queue.audios[0];
 			queue.audioPlayer?.stop();
 		}

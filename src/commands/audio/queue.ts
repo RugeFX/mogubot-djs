@@ -26,13 +26,22 @@ export default {
 			return;
 		}
 
-		const queueEmbed =
-			new EmbedBuilder()
-				.setThumbnail(interaction.guild.bannerURL())
-				.setColor(Colors.Blue)
-				.setTitle("Music Queue")
-				.setDescription(`Current music queue for ${interaction.guild.name}`)
-				.addFields({ name: "Queue", value: queue.audios.map((music, i) => i === 0 ? `**${i + 1} - ${music.metadata.title} (Currently Playing)**` : `${i + 1} - ${music.metadata.title}`).join("\n") });
+		const queueEmbed = new EmbedBuilder()
+			.setThumbnail(interaction.guild.iconURL())
+			.setColor(Colors.Blue)
+			.setTitle(`Music Queue ${queue.repeatMode === "all" ? "(Repeating Queue)" : null}`)
+			.setDescription(`Current music queue for ${interaction.guild.name}`)
+			.addFields({
+				name: "Queue",
+				value: queue.audios
+					.map((music, i) =>
+						i === 0
+							? `**${i + 1} - ${music.metadata.title} ${queue.repeatMode === "current" ? "(Repeating)" : "(Currently Playing)"
+							}**`
+							: `${i + 1} - ${music.metadata.title}`,
+					)
+					.join("\n"),
+			});
 
 		await interaction.reply({
 			embeds: [queueEmbed],

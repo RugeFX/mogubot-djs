@@ -11,4 +11,5 @@ export interface MusicQueue {
 	audioPlayer?: AudioPlayer;
 	audios: Music[];
 	guildId: string;
+	repeatMode: "off" | "all" | "current";
 }
