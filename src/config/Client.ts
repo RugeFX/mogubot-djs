@@ -46,15 +46,11 @@ export default class Client extends DJSClient {
 			const eventPath = join(__dirname, "../events", event);
 			const eventFile: Event = (await import(eventPath)).default;
 
-			switch (eventFile.type) {
-			case "once":
+			if (eventFile.once === true) {
 				this.once(eventFile.on, eventFile.handler);
-				break;
-			case "on":
+			}
+			else {
 				this.on(eventFile.on, eventFile.handler);
-				break;
-			default:
-				throw new Error(`Invalid event type on ${event}`);
 			}
 
 			console.log(`Event from file ${event} is registered!`);

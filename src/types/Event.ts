@@ -1,5 +1,5 @@
 export interface Event {
 	on: string;
-	type: "once" | "on";
+	once?: boolean;
 	handler: (...args: unknown[]) => void;
 }
