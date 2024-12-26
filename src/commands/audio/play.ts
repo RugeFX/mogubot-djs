@@ -2,6 +2,7 @@ import {
 	AudioPlayerStatus,
 	createAudioPlayer,
 	createAudioResource,
+	DiscordGatewayAdapterCreator,
 	entersState,
 	getVoiceConnection,
 	joinVoiceChannel,
@@ -132,13 +133,15 @@ async function connectToChannel(channel: VoiceBasedChannel, textChannel: TextBas
 		connection = joinVoiceChannel({
 			channelId: channel.id,
 			guildId: channel.guild.id,
-			adapterCreator: channel.guild.voiceAdapterCreator,
+			adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator,
 			debug: true,
 		});
 
 		connection.on(VoiceConnectionStatus.Destroyed, () => {
 			console.log("voice connection destroyed");
-			textChannel?.send({ content: `**Left voice channel \`${voiceChannel.name}\`**` });
+			if (textChannel && textChannel.isSendable()) {
+				textChannel.send({ content: `**Left voice channel \`${voiceChannel.name}\`**` });
+			}
 		});
 	}
 

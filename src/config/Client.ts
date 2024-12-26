@@ -12,7 +12,7 @@ import { Event } from "~/types/Event";
 
 export default class Client extends DJSClient {
 	public declare token: string;
-	commands: Collection<string, Command>;
+	public commands: Collection<string, Command>;
 	public musicQueues: Collection<string, MusicQueue>;
 
 	constructor(token: string, commandsPath: string) {

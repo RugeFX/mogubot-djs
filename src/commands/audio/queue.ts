@@ -29,7 +29,7 @@ export default {
 		const queueEmbed = new EmbedBuilder()
 			.setThumbnail(interaction.guild.iconURL())
 			.setColor(Colors.Blue)
-			.setTitle(`Music Queue ${queue.repeatMode === "all" ? "(Repeating Queue)" : null}`)
+			.setTitle(`Music Queue ${queue.repeatMode === "all" ? "(Repeating Queue)" : ""}`)
 			.setDescription(`Current music queue for ${interaction.guild.name}`)
 			.addFields({
 				name: "Queue",
