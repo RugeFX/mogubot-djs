@@ -1,21 +1,16 @@
-import { AutocompleteInteraction, Events } from "discord.js";
-import type { Event } from "~/types/Event";
-import type { WithClient } from "~/types/Command";
+import { Events } from "discord.js";
+import { eventHandler } from "~/utils/eventHandler";
 
-export default {
-	on: Events.InteractionCreate,
-	type: "on",
-	handler: (interaction: WithClient<AutocompleteInteraction<"cached">>) => {
-		if (!interaction.isAutocomplete()) return;
+export default eventHandler(Events.InteractionCreate, (interaction) => {
+	if (!interaction.isAutocomplete() || !interaction.inCachedGuild()) return;
 
-		const command = interaction.client.commands.get(interaction.commandName);
-		if (!command || !command.autoComplete) return;
+	const command = interaction.client.commands.get(interaction.commandName);
+	if (!command || !command.autoComplete) return;
 
-		try {
-			command.autoComplete(interaction);
-		}
-		catch (err) {
-			console.error(err);
-		}
-	},
-} as Event;
+	try {
+		command.autoComplete(interaction);
+	}
+	catch (err) {
+		console.error(err);
+	}
+});

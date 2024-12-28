@@ -1,11 +1,9 @@
 import { ActivityType, Events, PresenceUpdateStatus, REST, Routes } from "discord.js";
-import type Client from "~/config/Client";
-import type { Event } from "~/types/Event";
+import { eventHandler } from "~/utils/eventHandler";
 
-export default {
-	on: Events.ClientReady,
-	type: "once",
-	handler: async (client: Client) => {
+export default eventHandler(
+	Events.ClientReady,
+	async (client) => {
 		const rest = new REST({ version: "10" }).setToken(client.token);
 
 		client.user?.setPresence({
@@ -27,4 +25,4 @@ export default {
 
 		console.log(`Mogu mogu! Client: ${client.user?.tag}`);
 	},
-} as Event;
+);

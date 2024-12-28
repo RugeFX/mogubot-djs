@@ -6,10 +6,10 @@ export type WithClient<T> = T & { client: Client };
 interface Command {
 	data: SlashCommandBuilder;
 	execute: (
-		interaction: WithClient<ChatInputCommandInteraction<"cached">>
+		interaction: ChatInputCommandInteraction<"cached">
 	) => Promise<void>;
 	autoComplete?: (
-		interaction: WithClient<AutocompleteInteraction<"cached">>
+		interaction: AutocompleteInteraction<"cached">
 	) => Promise<void>;
 };
 

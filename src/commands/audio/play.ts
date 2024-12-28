@@ -94,18 +94,20 @@ export default {
 			return;
 		}
 
+		await interaction.deferReply();
+
 		const music: Music =
-			type === "local"
-				? {
-					metadata: { title: selectedMusic },
-					source: join(__dirname, `../../../assets/audio/${MUSIC_LIST[selectedMusic]}`),
-					type,
-				}
-				: {
-					metadata: { title: (await getYoutubeDetails(selectedMusic)).title },
-					source: selectedMusic,
-					type,
-				};
+                        type === "local"
+                        	? {
+                        		metadata: { title: selectedMusic },
+                        		source: join(__dirname, `../../../assets/audio/${MUSIC_LIST[selectedMusic]}`),
+                        		type,
+                        	}
+                        	: {
+                        		metadata: { title: (await getYoutubeDetails(selectedMusic)).title },
+                        		source: selectedMusic,
+                        		type,
+                        	};
 
 		const voiceConnection = await connectToChannel(voiceChannel, interaction.channel, voiceChannel);
 
@@ -114,13 +116,13 @@ export default {
 		if (!queue.currentlyPlaying) {
 			playAudio(music, client.musicQueues, queue, voiceConnection);
 
-			await interaction.reply({
+			await interaction.editReply({
 				content: `**Now Playing \`${music.metadata.title}\`**`,
 			});
 			return;
 		}
 
-		await interaction.reply({
+		await interaction.editReply({
 			content: `**Queued \`${music.metadata.title}\`**`,
 		});
 	},
@@ -213,8 +215,8 @@ function playNext(
 		setTimeout(() => {
 			if (
 				!queue.audios.length &&
-				!queue.currentlyPlaying &&
-				voiceConnection.state.status !== VoiceConnectionStatus.Destroyed
+                                !queue.currentlyPlaying &&
+                                voiceConnection.state.status !== VoiceConnectionStatus.Destroyed
 			) {
 				voiceConnection.destroy();
 				musicQueues.delete(queue.guildId);

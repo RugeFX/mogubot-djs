@@ -3,12 +3,14 @@ import {
 	Client as DJSClient,
 	GatewayIntentBits,
 } from "discord.js";
-import readCommands from "~/utils/readCommands";
-import type Command from "~/types/Command";
-import type { MusicQueue } from "~/types/Music";
 import { readdir } from "fs/promises";
 import { join } from "path";
-import { Event } from "~/types/Event";
+
+import readCommands from "~/utils/readCommands";
+
+import type Command from "~/types/Command";
+import type { MusicQueue } from "~/types/Music";
+import type { Event } from "~/types/Event";
 
 export default class Client extends DJSClient {
 	public declare token: string;
@@ -35,7 +37,7 @@ export default class Client extends DJSClient {
 		void this.setupEventHandlers();
 	}
 
-	public login(): Promise<string> {
+	public override login() {
 		return super.login(this.token);
 	}
 
