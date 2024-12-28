@@ -14,7 +14,7 @@
   "author": "RugeFX",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/voice": "^0.17.0",
+    "@discordjs/voice": "^0.18.0",
     "@distube/ytdl-core": "^4.14.4",
     "@distube/ytsr": "^2.0.4",
     "discord.js": "^14.14.1",
@@ -28,11 +28,11 @@
   "devDependencies": {
     "@eslint/js": "^9.1.1",
     "@types/node": "^18.19.31",
-    "eslint": "^8.57.0",
+    "eslint": "^9.17.0",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.7.1"
+    "typescript-eslint": "^8.18.2"
   }
 }
