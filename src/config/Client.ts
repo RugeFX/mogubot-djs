@@ -29,7 +29,7 @@ export default class Client extends DJSClient {
 		this.musicQueues = new Collection();
 		this.token = token;
 
-		this.readCommands(this.commands, commandsPath);
+		this.readCommands(commandsPath);
 		this.setupEventHandlers();
 	}
 
@@ -37,7 +37,7 @@ export default class Client extends DJSClient {
 		return super.login(this.token);
 	}
 
-	private async readCommands(collection: Collection<string, Command>, directory: string) {
+	private async readCommands(directory: string) {
 		const files = await fs.readdir(directory, { recursive: true });
 
 		for (const file of files) {
@@ -45,7 +45,7 @@ export default class Client extends DJSClient {
 
 			if (file.endsWith(".ts") || file.endsWith(".js")) {
 				const { default: command }: { default: Command } = await import(filePath);
-				collection.set(command.data.name, command);
+				this.commands.set(command.data.name, command);
 				console.log(`Done loading command : ${command.data.name}`);
 			}
 		}
