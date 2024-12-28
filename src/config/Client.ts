@@ -1,12 +1,8 @@
-import {
-	Collection,
-	Client as DJSClient,
-	GatewayIntentBits,
-} from "discord.js";
+import { Collection, Client as DJSClient, GatewayIntentBits } from "discord.js";
 import { readdir } from "fs/promises";
 import { join } from "path";
-
-import readCommands from "~/utils/readCommands";
+import fs from "fs/promises";
+import path from "path";
 
 import type Command from "~/types/Command";
 import type { MusicQueue } from "~/types/Music";
@@ -33,12 +29,26 @@ export default class Client extends DJSClient {
 		this.musicQueues = new Collection();
 		this.token = token;
 
-		void readCommands(this.commands, commandsPath);
-		void this.setupEventHandlers();
+		this.readCommands(this.commands, commandsPath);
+		this.setupEventHandlers();
 	}
 
 	public override login() {
 		return super.login(this.token);
+	}
+
+	private async readCommands(collection: Collection<string, Command>, directory: string) {
+		const files = await fs.readdir(directory, { recursive: true });
+
+		for (const file of files) {
+			const filePath = path.join(directory, file);
+
+			if (file.endsWith(".ts") || file.endsWith(".js")) {
+				const { default: command }: { default: Command } = await import(filePath);
+				collection.set(command.data.name, command);
+				console.log(`Done loading command : ${command.data.name}`);
+			}
+		}
 	}
 
 	private async setupEventHandlers() {
