@@ -19,7 +19,7 @@
   "author": "RugeFX",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/voice": "^0.18.0",
+    "@discordjs/voice": "^0.19.2",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.45.3",
