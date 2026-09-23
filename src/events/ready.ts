@@ -1,7 +1,7 @@
 import { ActivityType, Events, PresenceUpdateStatus, REST, Routes } from "discord.js";
-import { eventHandler } from "~/utils/eventHandler";
+import { eventHandlerOnce } from "~/utils/event-handler";
 
-export default eventHandler(
+export default eventHandlerOnce(
 	Events.ClientReady,
 	async (client) => {
 		const rest = new REST({ version: "10" }).setToken(client.token);

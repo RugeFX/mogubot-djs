@@ -1,31 +1,13 @@
-import {
-	AudioPlayerStatus,
-	createAudioPlayer,
-	createAudioResource,
-	DiscordGatewayAdapterCreator,
-	entersState,
-	getVoiceConnection,
-	joinVoiceChannel,
-	NoSubscriberBehavior,
-	VoiceConnection,
-	VoiceConnectionStatus,
-} from "@discordjs/voice";
-import { exec as ytdl_exec } from "youtube-dl-exec";
-import ytdl from "@distube/ytdl-core";
-import ytsr from "@distube/ytsr";
-import { SlashCommandBuilder, TextBasedChannel, VoiceBasedChannel } from "discord.js";
-import { existsSync, readdirSync } from "fs";
+import { SlashCommandBuilder } from "discord.js";
+import { existsSync } from "fs";
 import { join } from "path";
-import type Client from "~/config/Client";
-import type Command from "~/types/Command";
-import type { Music, MusicQueue } from "~/types/Music";
 
-const MUSIC_LIST = readdirSync(join(__dirname, "../../../assets/audio"))
-	.filter((file) => file.endsWith(".mp3"))
-	.reduce((acc, file) => {
-		acc[file.split(".")[0]] = file;
-		return acc;
-	}, {} as Record<string, string>);
+import { ASSETS_AUDIO_DIR, LOCAL_MUSIC_LIST } from "~/constants";
+import { requireUserInVoice } from "~/guards/voice-channel";
+import { connectToChannel, startPlayback } from "~/services/player";
+import { getVideoInfo, isValidYoutubeUrl, searchVideos } from "~/services/youtube";
+import type Command from "~/types/command";
+import type { Music } from "~/types/music";
 
 export default {
 	data: new SlashCommandBuilder()
@@ -40,7 +22,7 @@ export default {
 						.setName("music")
 						.setDescription("Select a music.")
 						.setRequired(true)
-						.addChoices(Object.keys(MUSIC_LIST).map((name) => ({ name, value: name }))),
+						.addChoices(Object.keys(LOCAL_MUSIC_LIST).map((name) => ({ name, value: name }))),
 				),
 		)
 		.addSubcommand((subcommand) =>
@@ -60,29 +42,22 @@ export default {
 
 		const query = interaction.options.getFocused().toLowerCase();
 
-		const result = await ytsr(query || "lofi", { limit: 10, type: "video", safeSearch: true });
-
 		try {
+			const videos = await searchVideos(query || "lofi", 10);
 			await interaction.respond(
-				result.items.map((video) => ({ name: video.name, value: video.url })),
+				videos.map((v) => ({ name: v.title, value: v.url })),
 			);
 		}
 		catch (error) {
 			console.error(error);
+			if (!interaction.responded) await interaction.respond([]).catch(console.error);
 		}
 	},
 	async execute(interaction) {
-		const voiceChannel = interaction.member.voice.channel;
+		const voiceChannel = await requireUserInVoice(interaction);
+		if (!voiceChannel) return;
+
 		const { client } = interaction;
-
-		if (!voiceChannel) {
-			await interaction.reply({
-				content: "You must be in a voice channel to use this command!",
-				ephemeral: true,
-			});
-			return;
-		}
-
 		const type = interaction.options.getSubcommand() as "local" | "youtube";
 		const selectedMusic = interaction.options.getString("music", true);
 
@@ -97,27 +72,29 @@ export default {
 		await interaction.deferReply();
 
 		const music: Music =
-                        type === "local"
-                        	? {
-                        		metadata: { title: selectedMusic },
-                        		source: join(__dirname, `../../../assets/audio/${MUSIC_LIST[selectedMusic]}`),
-                        		type,
-                        	}
-                        	: {
-                        		metadata: { title: (await getYoutubeDetails(selectedMusic)).title },
-                        		source: selectedMusic,
-                        		type,
-                        	};
+			type === "local"
+				? {
+					metadata: { title: selectedMusic },
+					source: join(ASSETS_AUDIO_DIR, LOCAL_MUSIC_LIST[selectedMusic]),
+					type,
+				}
+				: {
+					metadata: { title: (await getVideoInfo(selectedMusic)).title ?? selectedMusic },
+					source: selectedMusic,
+					type,
+				};
 
-		const voiceConnection = await connectToChannel(voiceChannel, interaction.channel, voiceChannel);
+		const voiceConnection = await connectToChannel(voiceChannel, interaction.channel, client.queues);
 
-		const queue = addMusicToQueue(music, client.musicQueues, interaction.guildId);
+		const queue = client.queues.add(interaction.guildId, music);
 
 		if (!queue.currentlyPlaying) {
-			playAudio(music, client.musicQueues, queue, voiceConnection);
+			const started = await startPlayback(client.queues, interaction.guildId, voiceConnection);
 
 			await interaction.editReply({
-				content: `**Now Playing \`${music.metadata.title}\`**`,
+				content: started
+					? `**Now Playing \`${music.metadata.title}\`**`
+					: `**Could not play \`${music.metadata.title}\`**`,
 			});
 			return;
 		}
@@ -128,171 +105,8 @@ export default {
 	},
 } as Command;
 
-async function connectToChannel(channel: VoiceBasedChannel, textChannel: TextBasedChannel | null, voiceChannel: VoiceBasedChannel) {
-	let connection = getVoiceConnection(channel.guild.id);
-
-	if (!connection) {
-		connection = joinVoiceChannel({
-			channelId: channel.id,
-			guildId: channel.guild.id,
-			adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator,
-			debug: true,
-		});
-
-		connection.on(VoiceConnectionStatus.Destroyed, () => {
-			console.log("voice connection destroyed");
-			if (textChannel && textChannel.isSendable()) {
-				textChannel.send({ content: `**Left voice channel \`${voiceChannel.name}\`**` });
-			}
-		});
-	}
-
-	try {
-		await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
-		return connection;
-	}
-	catch (error) {
-		connection.destroy();
-		throw error;
-	}
-}
-
-function playAudio(
-	music: Music,
-	musicQueues: Client["musicQueues"],
-	queue: MusicQueue,
-	voiceConnection: VoiceConnection,
-) {
-	if (!musicQueues.has(queue.guildId) || voiceConnection.state.status === VoiceConnectionStatus.Destroyed) return;
-
-	const audioPlayer = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
-
-	const resource = createAudioResource(
-		music.type === "local"
-			? join(__dirname, `../../../assets/audio/${MUSIC_LIST[music.metadata.title]}`)
-			: createYTStream(music.source),
-		{ metadata: music.metadata },
-	);
-
-	audioPlayer.play(resource);
-
-	voiceConnection.subscribe(audioPlayer);
-
-	queue.audioPlayer = audioPlayer;
-	queue.currentlyPlaying = true;
-
-	audioPlayer.on(AudioPlayerStatus.Idle, () => {
-		console.log("IM IDLE");
-
-		queue.currentlyPlaying = false;
-		playNext(musicQueues, queue, voiceConnection);
-	});
-}
-
-function playNext(
-	musicQueues: Client["musicQueues"],
-	queue: MusicQueue,
-	voiceConnection: VoiceConnection,
-) {
-	const lastMusic = queue.audios.shift();
-
-	console.log("repeat mode:", queue.repeatMode);
-	switch (queue.repeatMode) {
-	case "all":
-		if (!lastMusic) return;
-		console.log("repeating all");
-		// TODO: might rework logic later
-		queue.audios.push(lastMusic);
-		break;
-	case "current":
-		if (!lastMusic) return;
-		console.log("repeating current");
-		queue.audios.unshift(lastMusic);
-		break;
-	}
-
-	if (!queue.audios.length) {
-		setTimeout(() => {
-			if (
-				!queue.audios.length &&
-                                !queue.currentlyPlaying &&
-                                voiceConnection.state.status !== VoiceConnectionStatus.Destroyed
-			) {
-				voiceConnection.destroy();
-				musicQueues.delete(queue.guildId);
-			}
-		}, 30_000);
-		return;
-	}
-
-	const nextMusic = queue.audios[0];
-	playAudio(nextMusic, musicQueues, queue, voiceConnection);
-}
-
-function addMusicToQueue(music: Music, musicQueues: Client["musicQueues"], guildId: string) {
-	const queueExists = musicQueues.has(guildId);
-
-	if (!queueExists) {
-		const queue: MusicQueue = {
-			currentlyPlaying: false,
-			audios: [music],
-			guildId,
-			repeatMode: "off",
-		};
-		musicQueues.set(guildId, queue);
-
-		return queue;
-	}
-
-	const queue = musicQueues.get(guildId)!;
-	queue.audios.push(music);
-
-	return queue;
-}
-
-function createYTStream(url: string) {
-	console.log("creating yt stream");
-
-	const process = ytdl_exec(
-		url,
-		{
-			output: "-",
-			format: "bestaudio[ext=webm][acodec=opus][asr=48000]/bestaudio",
-			limitRate: "1M",
-			rmCacheDir: true,
-			verbose: true,
-		},
-		{ stdio: ["ignore", "pipe", "ignore"], killSignal: "SIGTERM" },
-	);
-
-	const stream = process.stdout!;
-
-	process.catch((err: Error) => {
-		console.error("Skipped song", err.name);
-	});
-
-	stream.on("error", (err) => {
-		if (!process.killed) process.kill();
-
-		if (err.message.includes("Premature close")) return;
-
-		console.error("YT Music process error!", err.message);
-	});
-
-	process.unref();
-
-	console.log("returning yt stream");
-
-	return stream;
-}
-
-async function getYoutubeDetails(url: string) {
-	const info = await ytdl.getBasicInfo(url);
-	return info.videoDetails;
-}
-
 function validateSource(source: string, type: "local" | "youtube") {
 	return type === "local"
-		? existsSync(join(__dirname, `../../../assets/audio/${MUSIC_LIST[source]}`))
-		: ytdl.validateURL(source);
+		? Boolean(LOCAL_MUSIC_LIST[source] && existsSync(join(ASSETS_AUDIO_DIR, LOCAL_MUSIC_LIST[source])))
+		: isValidYoutubeUrl(source);
 }

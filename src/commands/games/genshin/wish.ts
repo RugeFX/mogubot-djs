@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, Colors, SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import { Character } from "~/database/Schema";
+import { Character } from "~/database/schema";
 import { addCharacterToInventory, getCurrentInventory } from "~/utils/genshin";
-import type { ICharacter } from "~/types/GenshinTypes";
+import type { ICharacter } from "~/types/genshin-types";
 
 export default {
 	data: new SlashCommandBuilder().setName("wish").setDescription("Wish genshin characters!"),

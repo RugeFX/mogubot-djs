@@ -1,28 +1,20 @@
-import { getVoiceConnection } from "@discordjs/voice";
 import { SlashCommandBuilder } from "discord.js";
-import Command from "~/types/Command";
+import { requireVoiceConnection } from "~/guards/voice-channel";
+import Command from "~/types/command";
 
 export default {
 	data: new SlashCommandBuilder()
 		.setName("stop")
 		.setDescription("Stops the bot from playing music."),
 	async execute(interaction) {
-		const voiceChannel = interaction.member.voice.channel;
-		const voiceConnection = getVoiceConnection(interaction.guildId);
+		const ctx = await requireVoiceConnection(interaction);
+		if (!ctx) return;
 
-		if (!voiceChannel || !voiceConnection) {
-			await interaction.reply({
-				content: "You must be in a voice channel to use this command!",
-				ephemeral: true,
-			});
-			return;
-		}
-
-		interaction.client.musicQueues.delete(interaction.guildId);
-		voiceConnection.destroy();
+		interaction.client.queues.delete(interaction.guildId);
+		ctx.voiceConnection.destroy();
 
 		await interaction.reply({
-			content: `**Stopped playing music in channel \`${voiceChannel.name}\`**`,
+			content: `**Stopped playing music in channel \`${ctx.voiceChannel.name}\`**`,
 			ephemeral: true,
 		});
 	},

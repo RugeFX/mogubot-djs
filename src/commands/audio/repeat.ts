@@ -1,6 +1,7 @@
-import { getVoiceConnection } from "@discordjs/voice";
 import { SlashCommandBuilder } from "discord.js";
-import type Command from "~/types/Command";
+import { requireVoiceConnection } from "~/guards/voice-channel";
+import type { RepeatMode } from "~/types/music";
+import type Command from "~/types/command";
 
 export default {
 	data: new SlashCommandBuilder()
@@ -17,40 +18,29 @@ export default {
 				.setDescription("Repeats all of the musics in the queue"),
 		),
 	async execute(interaction) {
-		const voiceChannel = interaction.member.voice.channel;
-		const voiceConnection = getVoiceConnection(interaction.guildId);
-		const { client } = interaction;
+		const ctx = await requireVoiceConnection(interaction);
+		if (!ctx) return;
 
-		if (!voiceChannel || !voiceConnection) {
-			await interaction.reply({
-				content: "You must be in a voice channel to use this command!",
-				ephemeral: true,
-			});
-			return;
-		}
+		const { queues } = interaction.client;
+		const mode = interaction.options.getSubcommand() as RepeatMode;
+		const currentTrack = queues.currentTrack(interaction.guildId);
 
-		const mode = interaction.options.getSubcommand();
-		const queue = client.musicQueues.get(interaction.guildId);
-
-		if (!queue || !queue.audios.length) {
+		if (!currentTrack) {
 			await interaction.reply({
 				content: "There is no music in the queue.",
 				ephemeral: true,
 			});
 			return;
-		};
+		}
+
+		queues.setRepeatMode(interaction.guildId, mode);
 
 		if (mode === "current") {
-			const music = queue.audios[0];
-			queue.repeatMode = "current";
-
 			await interaction.reply({
-				content: `**Repeating \`${music.metadata.title}\`**`,
+				content: `**Repeating \`${currentTrack.metadata.title}\`**`,
 			});
 			return;
 		}
-
-		queue.repeatMode = "all";
 
 		await interaction.reply({
 			content: "**Repeating all musics in the queue.**",

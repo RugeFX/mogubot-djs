@@ -1,38 +1,31 @@
-import { getVoiceConnection } from "@discordjs/voice";
 import { SlashCommandBuilder } from "discord.js";
-import Command from "~/types/Command";
+import { requireVoiceConnection } from "~/guards/voice-channel";
+import { skipPlayback } from "~/services/player";
+import Command from "~/types/command";
 
 export default {
 	data: new SlashCommandBuilder()
 		.setName("skip")
 		.setDescription("Skips the currently playing music."),
 	async execute(interaction) {
-		const voiceChannel = interaction.member.voice.channel;
-		const voiceConnection = getVoiceConnection(interaction.guildId);
-		const { client } = interaction;
+		const ctx = await requireVoiceConnection(interaction);
+		if (!ctx) return;
 
-		if (!voiceChannel || !voiceConnection) {
-			await interaction.reply({
-				content: "You must be in a voice channel to use this command!",
-				ephemeral: true,
-			});
-			return;
-		}
+		const { queues } = interaction.client;
+		const currentTrack = queues.currentTrack(interaction.guildId);
 
-		const queue = client.musicQueues.get(interaction.guildId);
-
-		if (!queue || !queue.audios.length) {
+		if (!currentTrack) {
 			await interaction.reply({ content: "There is no music in the queue." });
 			return;
 		}
 
-		const skippedMusic = queue.audios![0];
-		queue.audioPlayer?.stop();
-
-		console.log(queue.audios);
+		if (!skipPlayback(queues, interaction.guildId, ctx.voiceConnection)) {
+			await interaction.reply({ content: "There is no music playing." });
+			return;
+		}
 
 		await interaction.reply({
-			content: `**Skipped \`${skippedMusic.metadata.title}\`**`,
+			content: `**Skipped \`${currentTrack.metadata.title}\`**`,
 		});
 	},
 } as Command;

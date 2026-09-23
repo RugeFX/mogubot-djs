@@ -1,5 +1,5 @@
 import type { AutocompleteInteraction, ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import type Client from "~/config/Client";
+import type Client from "~/config/client";
 
 export type WithClient<T> = T & { client: Client };
 

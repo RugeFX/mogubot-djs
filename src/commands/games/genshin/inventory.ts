@@ -8,8 +8,8 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 } from "discord.js";
-import { Inventory, User } from "~/database/Schema";
-import type { CharactersPerUser } from "~/types/GenshinTypes";
+import { Inventory, User } from "~/database/schema";
+import type { CharactersPerUser } from "~/types/genshin-types";
 
 export default {
 	data: new SlashCommandBuilder()
@@ -19,33 +19,31 @@ export default {
 			user.setName("user").setDescription("Choose a user.").setRequired(false),
 		),
 	async execute(interaction: ChatInputCommandInteraction) {
-		const interactionUser = interaction.options.getUser("user");
-		const currentUserId = interactionUser ? interactionUser.id : interaction.user.id;
+		const user = interaction.options.getUser("user") ?? interaction.user;
 
-		if (interaction.user.bot || interactionUser?.bot) {
+		if (user.bot) {
 			await interaction.reply({
 				embeds: [
 					new EmbedBuilder()
 						.setColor(Colors.Red)
 						.setTitle("Unable to perform action")
-						.setDescription(
-							`${interactionUser?.username || interaction.user.username} is a Discord Bot`,
-						),
+						.setDescription(`${user.username} is a Discord Bot`),
 				],
 				ephemeral: true,
 			});
+
 			return;
 		}
 
 		const currentUser = await User.findOneAndUpdate(
 			{
-				discordId: currentUserId,
+				discordId: user.id,
 			},
 			{},
 			{ upsert: true },
 		);
 
-		console.log("Current user id :" + currentUserId);
+		console.log("Current user id :" + user.id);
 
 		const currentInventory = await Inventory.findOne({
 			userId: currentUser?._id,
@@ -56,10 +54,12 @@ export default {
 
 		const inventoryEmbed = () =>
 			new EmbedBuilder()
-				.setThumbnail(interactionUser?.avatarURL() || interaction.user.avatarURL({ size: 1024 }))
+				.setThumbnail(
+					user.avatarURL({ size: 1024 }),
+				)
 				.setColor(Colors.Blue)
 				.setTitle("Characters")
-				.setDescription(`${interactionUser?.username || interaction.user.username}'s characters`);
+				.setDescription(`${user.username}'s characters`);
 
 		if (!currentInventory?.charactersId) {
 			await interaction.reply({
@@ -84,13 +84,13 @@ export default {
 			inventoryEmbed().addFields({
 				name: rarity === 4 ? "4 Stars" : "5 Stars",
 				value:
-          rarity === 4
-          	? fourStarCharacters.length > 0
-          		? constructWishString(fourStarCharacters)
-          		: "You have no 4 stars characters!"
-          	: fiveStarCharacters.length > 0
-          		? constructWishString(fiveStarCharacters)
-          		: "You have no 5 stars characters!",
+					rarity === 4
+						? fourStarCharacters.length > 0
+							? constructWishString(fourStarCharacters)
+							: "You have no 4 stars characters!"
+						: fiveStarCharacters.length > 0
+							? constructWishString(fiveStarCharacters)
+							: "You have no 5 stars characters!",
 			});
 
 		const actionRow = (rarity: number) =>
@@ -115,7 +115,8 @@ export default {
 			components: [actionRow(rarity)],
 		});
 
-		const collectorFilter = (i: MessageComponentInteraction) => i.user.id === interaction.user.id;
+		const collectorFilter = (i: MessageComponentInteraction) =>
+			i.user.id === interaction.user.id;
 
 		const collector = response.createMessageComponentCollector({
 			filter: collectorFilter,
@@ -149,7 +150,9 @@ export default {
 function constructWishString(characters: CharactersPerUser[]): string {
 	return characters
 		.map(({ characterId, constellation }) =>
-			constellation > 0 ? `${characterId.name} C${constellation}` : characterId.name,
+			constellation > 0
+				? `${characterId.name} C${constellation}`
+				: characterId.name,
 		)
 		.join("\n");
 }

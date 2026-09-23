@@ -1,5 +1,5 @@
 import { Schema, Types, model } from "mongoose";
-import { ICharacter, IInventory, IUser } from "../types/GenshinTypes";
+import { ICharacter, IInventory, IUser } from "../types/genshin-types";
 
 const characterSchema = new Schema<ICharacter>({
 	name: { type: String, required: true },

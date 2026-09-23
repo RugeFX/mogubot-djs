@@ -8,22 +8,21 @@
     "start:dev": "tsx src/index.ts",
     "start:prod": "NODE_ENV=production node dist",
     "lint": "eslint src",
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
+    "test": "tsx --test tests/*.test.ts",
+    "build": "rm -rf dist && tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "keywords": [],
   "author": "RugeFX",
   "license": "ISC",
   "dependencies": {
     "@discordjs/voice": "^0.18.0",
-    "@distube/ytdl-core": "^4.14.4",
-    "@distube/ytsr": "^2.0.4",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "libsodium-wrappers": "^0.7.14",
     "mongodb": "^6.8.0",
     "mongoose": "^8.3.2",
     "opusscript": "^0.1.1",
-    "youtube-dl-exec": "^3.0.7"
+    "youtubei.js": "github:LuanRT/YouTube.js#427d14d3b0798020bb95b78fdb9a78429edb1de9"
   },
   "devDependencies": {
     "@eslint/js": "^9.1.1",
