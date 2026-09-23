@@ -6,6 +6,7 @@ import { ASSETS_AUDIO_DIR, LOCAL_MUSIC_LIST } from "~/constants";
 import { requireUserInVoice } from "~/guards/voice-channel";
 import { connectToChannel, startPlayback } from "~/services/player";
 import { getVideoInfo, isValidYoutubeUrl, searchVideos } from "~/services/youtube";
+import { respondAutocompleteWithinDeadline } from "~/utils/autocomplete";
 import type Command from "~/types/command";
 import type { Music } from "~/types/music";
 
@@ -40,18 +41,10 @@ export default {
 	async autoComplete(interaction) {
 		if (interaction.options.getSubcommand() === "local") return;
 
-		const query = interaction.options.getFocused().toLowerCase();
-
-		try {
-			const videos = await searchVideos(query || "lofi", 10);
-			await interaction.respond(
-				videos.map((v) => ({ name: v.title, value: v.url })),
-			);
-		}
-		catch (error) {
-			console.error(error);
-			if (!interaction.responded) await interaction.respond([]).catch(console.error);
-		}
+		const query = interaction.options.getFocused().trim().toLowerCase();
+		await respondAutocompleteWithinDeadline(interaction, async () =>
+			query ? (await searchVideos(query, 10)).map((v) => ({ name: v.title, value: v.url })) : [],
+		);
 	},
 	async execute(interaction) {
 		const voiceChannel = await requireUserInVoice(interaction);
