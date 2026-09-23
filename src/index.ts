@@ -1,17 +1,30 @@
 import "dotenv/config";
-import { join } from "node:path";
+
 import { generateDependencyReport } from "@discordjs/voice";
+import { join } from "node:path";
 
-import configureDB from "./database/configure";
 import Client from "./config/client";
+import configureDB from "./database/configure";
+import { closeDB } from "./database/client";
 
-/** Configures and sets up the database */
-configureDB();
+async function start(): Promise<void> {
+	await configureDB();
 
-/** Creates the client and sets up the listeners & commands */
-const commandsPath = join(__dirname, "commands");
-const client = new Client(process.env.TOKEN!, commandsPath);
-void client.login().catch(console.error);
+	const commandsPath = join(__dirname, "commands");
+	const client = new Client(process.env.TOKEN!, commandsPath);
 
-/** Debug */
-console.log(generateDependencyReport());
+	try {
+		await client.login();
+	}
+	catch (error) {
+		await closeDB();
+		throw error;
+	}
+
+	console.log(generateDependencyReport());
+}
+
+void start().catch((error: unknown) => {
+	console.error("MoguBot startup failed:", error);
+	process.exitCode = 1;
+});

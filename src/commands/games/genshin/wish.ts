@@ -1,30 +1,29 @@
-import { ChatInputCommandInteraction, Colors, SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import { Character } from "~/database/schema";
-import { addCharacterToInventory, getCurrentInventory } from "~/utils/genshin";
-import type { ICharacter } from "~/types/genshin-types";
+import {
+	ChatInputCommandInteraction,
+	Colors,
+	SlashCommandBuilder,
+	EmbedBuilder,
+} from "discord.js";
+
+import { getCharactersByRarity, grantCharacterToUser } from "~/database/genshin-repository";
+import type { CharacterRecord } from "~/database/schema";
 
 export default {
 	data: new SlashCommandBuilder().setName("wish").setDescription("Wish genshin characters!"),
 	async execute(interaction: ChatInputCommandInteraction) {
 		const character = await wishRandomCharacter();
-		const currentInventory = await getCurrentInventory(interaction.user.id);
+		const constellation = await grantCharacterToUser(interaction.user.id, character.id);
 
 		const wishingEmbed = constructWishingEmbed(character);
 		const wishedEmbed = constructWishedEmbed(character);
 
-		const alreadyHasCharacter = currentInventory.charactersId?.find((c) =>
-			character._id?.equals(c.characterId._id),
-		);
-		if (alreadyHasCharacter !== undefined) {
+		if (constellation > 0) {
 			wishedEmbed.addFields({
 				name: "Duplicate",
-				value: `Your ${character.name}'s constellation is now on C${
-					alreadyHasCharacter.constellation + 1
-				}!`,
+				value: `Your ${character.name}'s constellation is now on C${constellation}!`,
 			});
 		}
 
-		await addCharacterToInventory(currentInventory, character);
 		await interaction.reply({ embeds: [wishingEmbed] });
 
 		setTimeout(
@@ -36,36 +35,38 @@ export default {
 	},
 };
 
-async function wishRandomCharacter(): Promise<ICharacter> {
-	const characters: ICharacter[] = await Character.find();
-	const fiveStars = characters.filter((c) => c.rarity === 5);
-	const fourStars = characters.filter((c) => c.rarity === 4);
-	const gacha: number = randomGen([10, 90]);
-	// const randomIndex = Math.floor(Math.random() * (characters.length + 1));
-	if (gacha === 0) {
-		return fiveStars[Math.floor(Math.random() * (fiveStars.length + 1))];
+async function wishRandomCharacter(): Promise<CharacterRecord> {
+	const [fiveStars, fourStars] = await Promise.all([
+		getCharactersByRarity(5),
+		getCharactersByRarity(4),
+	]);
+	const isFiveStar = randomGen([10, 90]) === 0;
+	const candidates = isFiveStar ? fiveStars : fourStars;
+	if (candidates.length === 0) {
+		throw new Error(`No ${isFiveStar ? 5 : 4}-star characters are seeded in the catalog.`);
 	}
-	return fourStars[Math.floor(Math.random() * (fourStars.length + 1))];
+
+	return candidates[Math.floor(Math.random() * candidates.length)]!;
 }
 
-function randomGen(probas: number[]) {
-	const ar: number[] = [];
-	let i = 0;
+function randomGen(probabilities: number[]): number {
+	const thresholds: number[] = [];
 	let sum = 0;
 
-	for (i = 0; i < probas.length - 1; i++) {
-		sum += probas[i] / 100.0;
-		ar[i] = sum;
+	for (let i = 0; i < probabilities.length - 1; i++) {
+		sum += probabilities[i] / 100;
+		thresholds[i] = sum;
 	}
 
-	const r = Math.random();
-
-	for (i = 0; i < ar.length && r >= ar[i]; i++);
-
-	return i;
+	const random = Math.random();
+	let index = 0;
+	while (index < thresholds.length && random >= thresholds[index]) {
+		index++;
+	}
+	return index;
 }
 
-function constructWishingEmbed(character: ICharacter) {
+function constructWishingEmbed(character: CharacterRecord) {
 	return new EmbedBuilder()
 		.setColor(Colors.White)
 		.setTitle("Wishing")
@@ -77,11 +78,11 @@ function constructWishingEmbed(character: ICharacter) {
 		);
 }
 
-function constructWishedEmbed(character: ICharacter) {
+function constructWishedEmbed(character: CharacterRecord) {
 	return new EmbedBuilder()
 		.setColor(character.rarity === 5 ? Colors.Gold : Colors.Purple)
-		.setTitle(`${character.name}`)
+		.setTitle(character.name)
 		.setDescription(`You recieved ${character.name}!`)
-		.setImage(`${character.image}`)
+		.setImage(character.image)
 		.setTimestamp();
 }

@@ -1,35 +1,41 @@
-import { Schema, Types, model } from "mongoose";
-import { ICharacter, IInventory, IUser } from "../types/genshin-types";
+import { sql } from "drizzle-orm";
+import {
+	check,
+	integer,
+	pgTable,
+	primaryKey,
+	serial,
+	smallint,
+	text,
+} from "drizzle-orm/pg-core";
 
-const characterSchema = new Schema<ICharacter>({
-	name: { type: String, required: true },
-	image: { type: String, required: true },
-	rarity: { type: Number, required: true },
-	vision: { type: String, required: true },
+export const users = pgTable("users", {
+	discordId: text("discord_id").primaryKey(),
 });
 
-const inventorySchema = new Schema<IInventory>({
-	userId: {
-		type: Types.ObjectId,
-		ref: "User",
-	},
-	charactersId: [
-		{
-			characterId: {
-				type: Types.ObjectId,
-				ref: "Character",
-			},
-			constellation: Number,
-		},
-	],
-});
+export const characters = pgTable("characters", {
+	id: serial("id").primaryKey(),
+	name: text("name").notNull().unique(),
+	image: text("image").notNull(),
+	rarity: smallint("rarity").notNull(),
+	vision: text("vision").notNull(),
+}, table => ({
+	rarityCheck: check("characters_rarity_check", sql`${table.rarity} IN (4, 5)`),
+}));
 
-const userSchema = new Schema<IUser>({
-	discordId: Number,
-});
+export const userCharacters = pgTable("user_characters", {
+	userId: text("user_id")
+		.notNull()
+		.references(() => users.discordId, { onDelete: "cascade" }),
+	characterId: integer("character_id")
+		.notNull()
+		.references(() => characters.id, { onDelete: "restrict" }),
+	constellation: smallint("constellation").notNull().default(0),
+}, table => ({
+	primaryKey: primaryKey({ columns: [table.userId, table.characterId] }),
+	constellationCheck: check("user_characters_constellation_check", sql`${table.constellation} >= 0`),
+}));
 
-const Character = model<ICharacter>("Character", characterSchema);
-const Inventory = model<IInventory>("Inventory", inventorySchema);
-const User = model<IUser>("User", userSchema);
-
-export { User, Character, Inventory };
+export type CharacterRecord = typeof characters.$inferSelect;
+export type CharacterSeed = Pick<CharacterRecord, "name" | "image" | "rarity" | "vision">;
+export type CharacterRarity = 4 | 5;
