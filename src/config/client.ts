@@ -11,8 +11,9 @@ import { GuildQueueManager } from "~/services/queue";
 export default class Client extends DJSClient {
 	public commands: Collection<string, Command>;
 	public queues: GuildQueueManager;
+	private readonly loginToken: string;
 
-	public constructor(public token: string, public commandsPath: string) {
+	public constructor(token: string, public commandsPath: string) {
 		super({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -24,13 +25,14 @@ export default class Client extends DJSClient {
 			],
 		});
 
+		this.loginToken = token;
 		this.commands = new Collection();
 		this.queues = new GuildQueueManager();
 	}
 
 	public override async login() {
 		await this.init();
-		return super.login(this.token);
+		return super.login(this.loginToken);
 	}
 
 	private async init() {
