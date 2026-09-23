@@ -1,0 +1,746 @@
+[
+  {
+    "name": "Aino",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/aino.png",
+    "rarity": 4,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Albedo",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/albedo.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Alhaitham",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/alhaitham.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Aloy",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/aloy.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Alyosha",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/alyosha.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Amber",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/amber.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Arataki Itto",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/arataki_itto.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Arlecchino",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/arlecchino.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Baizhu",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/baizhu.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Barbara",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/barbara.png",
+    "rarity": 4,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Beidou",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/beidou.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Bennett",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/bennett.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Candace",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/candace.png",
+    "rarity": 4,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Charlotte",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/charlotte.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Chasca",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/chasca.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Chevreuse",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/chevreuse.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Chiori",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/chiori.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Chongyun",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/chongyun.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Citlali",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/citlali.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Clorinde",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/clorinde.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Collei",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/collei.png",
+    "rarity": 4,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Columbina",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/columbina.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Cyno",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/cyno.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Dahlia",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/dahlia.png",
+    "rarity": 4,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Dehya",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/dehya.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Diluc",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/diluc.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Diona",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/diona.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Dori",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/dori.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Durin",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/durin.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Emilie",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/emilie.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Escoffier",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/escoffier.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Eula",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/eula.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Faruzan",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/faruzan.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Fischl",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/fischl.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Flins",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/flins.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Freminet",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/freminet.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Furina",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/furina.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Gaming",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/gaming.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Ganyu",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/ganyu.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Gorou",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/gorou.png",
+    "rarity": 4,
+    "vision": "Geo"
+  },
+  {
+    "name": "Hu Tao",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/hu_tao.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Iansan",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/iansan.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Ifa",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/ifa.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Illuga",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/illuga.png",
+    "rarity": 4,
+    "vision": "Geo"
+  },
+  {
+    "name": "Ineffa",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/ineffa.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Jahoda",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/jahoda.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Jean",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/jean.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Kachina",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kachina.png",
+    "rarity": 4,
+    "vision": "Geo"
+  },
+  {
+    "name": "Kaedehara Kazuha",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kaedehara_kazuha.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Kaeya",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kaeya.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Kamisato Ayaka",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kamisato_ayaka.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Kamisato Ayato",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kamisato_ayato.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Kaveh",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kaveh.png",
+    "rarity": 4,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Keqing",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/keqing.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Kinich",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kinich.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Kirara",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kirara.png",
+    "rarity": 4,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Klee",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/klee.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Kujou Sara",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kujou_sara.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Kuki Shinobu",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/kuki_shinobu.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Lan Yan",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/lan_yan.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Lauma",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/lauma.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Layla",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/layla.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Linnea",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/linnea.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Lisa",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/lisa.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Lohen",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/lohen.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Lynette",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/lynette.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Lyney",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/lyney.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Mavuika",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/mavuika.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Mika",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/mika.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Mona",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/mona.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Mualani",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/mualani.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Nahida",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/nahida.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Navia",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/navia.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Nefer",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/nefer.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Neuvillette",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/neuvillette.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Nicole",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/nicole.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Nilou",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/nilou.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Ningguang",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/ningguang.png",
+    "rarity": 4,
+    "vision": "Geo"
+  },
+  {
+    "name": "Noelle",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/noelle.png",
+    "rarity": 4,
+    "vision": "Geo"
+  },
+  {
+    "name": "Odette",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/odette.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Ororon",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/ororon.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Prune",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/prune.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Qiqi",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/qiqi.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Raiden Shogun",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/raiden_shogun.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Razor",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/razor.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Rosaria",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/rosaria.png",
+    "rarity": 4,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Sandrone",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/sandrone.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Sangonomiya Kokomi",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/sangonomiya_kokomi.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Sayu",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/sayu.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Sethos",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/sethos.png",
+    "rarity": 4,
+    "vision": "Electro"
+  },
+  {
+    "name": "Shenhe",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/shenhe.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Shikanoin Heizou",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/shikanoin_heizou.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Sigewinne",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/sigewinne.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Skirk",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/skirk.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Sucrose",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/sucrose.png",
+    "rarity": 4,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Tartaglia",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/tartaglia.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Thoma",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/thoma.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Tighnari",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/tighnari.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Traveler (Anemo)",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/traveler_anemo.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Traveler (Cryo)",
+    "image": "https://enka.network/ui/UI_AvatarIcon_PlayerGirl.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Traveler (Dendro)",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/traveler_dendro.png",
+    "rarity": 5,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Traveler (Electro)",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/traveler_electro.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Traveler (Geo)",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/traveler_geo.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Traveler (Hydro)",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/traveler_hydro.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Varesa",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/varesa.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Varka",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/varka.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Venti",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/venti.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Wanderer",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/wanderer.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Wriothesley",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/wriothesley.png",
+    "rarity": 5,
+    "vision": "Cryo"
+  },
+  {
+    "name": "Xiangling",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/xiangling.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Xianyun",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/xianyun.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Xiao",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/xiao.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Xilonen",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/xilonen.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Xingqiu",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/xingqiu.png",
+    "rarity": 4,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Xinyan",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/xinyan.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Yae Miko",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/yae_miko.png",
+    "rarity": 5,
+    "vision": "Electro"
+  },
+  {
+    "name": "Yanfei",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/yanfei.png",
+    "rarity": 4,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Yaoyao",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/yaoyao.png",
+    "rarity": 4,
+    "vision": "Dendro"
+  },
+  {
+    "name": "Yelan",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/yelan.png",
+    "rarity": 5,
+    "vision": "Hydro"
+  },
+  {
+    "name": "Yoimiya",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/yoimiya.png",
+    "rarity": 5,
+    "vision": "Pyro"
+  },
+  {
+    "name": "Yumemizuki Mizuki",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/yumemizuki_mizuki.png",
+    "rarity": 5,
+    "vision": "Anemo"
+  },
+  {
+    "name": "Yun Jin",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/yun_jin.png",
+    "rarity": 4,
+    "vision": "Geo"
+  },
+  {
+    "name": "Zhongli",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/zhongli.png",
+    "rarity": 5,
+    "vision": "Geo"
+  },
+  {
+    "name": "Zibai",
+    "image": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/0a88d5391005a4331a1413966528dd1762ce2614/static/images/characters/zibai.png",
+    "rarity": 5,
+    "vision": "Geo"
+  }
+]

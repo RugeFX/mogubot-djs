@@ -1,0 +1,17 @@
+[
+  {
+    "id": "manekin",
+    "name": "Manekin",
+    "reason": "missing vision"
+  },
+  {
+    "id": "manekina",
+    "name": "Manekina",
+    "reason": "missing vision"
+  },
+  {
+    "id": "traveler_pyro",
+    "name": "Traveler (undefined)",
+    "reason": "missing vision"
+  }
+]
