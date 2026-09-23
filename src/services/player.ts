@@ -18,6 +18,7 @@ import { ASSETS_AUDIO_DIR, LOCAL_MUSIC_LIST } from "~/constants";
 import { GuildQueueManager } from "~/services/queue";
 import { getAudioStream } from "~/services/youtube";
 import type { MusicQueue } from "~/types/music";
+import { describeVoiceState } from "~/utils/voice-diagnostics";
 
 /** Idle disconnect delay in ms (30 seconds). */
 const IDLE_TIMEOUT_MS = 30_000;
@@ -44,6 +45,9 @@ export async function connectToChannel(
 			adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator,
 			debug: true,
 		});
+		connection.on("stateChange", (oldState, newState) => {
+			console.info(`[VOICE-DIAG] guild=${channel.guild.id} ${describeVoiceState(oldState)} -> ${describeVoiceState(newState)}`);
+		});
 
 		connection.on(VoiceConnectionStatus.Destroyed, () => {
 			queues.delete(channel.guild.id);
@@ -58,6 +62,7 @@ export async function connectToChannel(
 		return connection;
 	}
 	catch (error) {
+		console.warn(`[VOICE-DIAG] guild=${channel.guild.id} did not reach ready; final state=${describeVoiceState(connection.state)}`);
 		connection.destroy();
 		throw error;
 	}
