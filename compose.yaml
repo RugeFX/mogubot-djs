@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mogubot
+      POSTGRES_DB: mogubot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      target: migrate
+    environment:
+      DATABASE_URL: postgresql://mogubot:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/mogubot
+    depends_on:
+      db:
+        condition: service_healthy
+
+  bot:
+    build:
+      context: .
+      target: runtime
+    environment:
+      TOKEN: ${TOKEN:?Set TOKEN in .env}
+      CLIENT_ID: ${CLIENT_ID:-}
+      GUILD_ID: ${GUILD_ID:-}
+      DATA_API_KEY: ${DATA_API_KEY:-}
+      DATABASE_URL: postgresql://mogubot:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/mogubot
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
